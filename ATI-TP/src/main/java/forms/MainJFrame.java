@@ -4,6 +4,7 @@
  */
 package forms;
 
+import com.maxel.ati.tp.EasyImage;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -17,12 +18,16 @@ import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 
 /**
  *
  * @author maximo
  */
 public class MainJFrame extends javax.swing.JFrame {
+
+    EasyImage img1 = null;
+    EasyImage img2 = null;
 
     /**
      * Creates new form MainJFrame
@@ -41,42 +46,100 @@ public class MainJFrame extends javax.swing.JFrame {
     private void initComponents() {
 
         jMenu1 = new javax.swing.JMenu();
+        jMenuItem1 = new javax.swing.JMenuItem();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu2 = new javax.swing.JMenu();
+        LoadImg1 = new javax.swing.JMenuItem();
         jMenu4 = new javax.swing.JMenu();
-        jMenuItem2 = new javax.swing.JMenuItem();
-        Load = new javax.swing.JMenuItem();
-        jMenuItem3 = new javax.swing.JMenuItem();
+        NegativeImg1 = new javax.swing.JMenuItem();
+        LoadImg2 = new javax.swing.JMenuItem();
+        jMenu5 = new javax.swing.JMenu();
+        Negative2 = new javax.swing.JMenuItem();
+        jMenu6 = new javax.swing.JMenu();
+        Suma = new javax.swing.JMenuItem();
+        Resta12 = new javax.swing.JMenuItem();
+        Resta21 = new javax.swing.JMenuItem();
+        Save1 = new javax.swing.JMenuItem();
         jMenu3 = new javax.swing.JMenu();
 
         jMenu1.setText("jMenu1");
+
+        jMenuItem1.setText("jMenuItem1");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jMenu2.setText("File");
 
-        jMenu4.setText("jMenu4");
+        LoadImg1.setText("Load img 1...");
+        LoadImg1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                LoadImg1ActionPerformed(evt);
+            }
+        });
+        jMenu2.add(LoadImg1);
 
-        jMenuItem2.setText("jMenuItem2");
-        jMenu4.add(jMenuItem2);
+        jMenu4.setText("Edit img 1");
+
+        NegativeImg1.setText("Negative");
+        NegativeImg1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                NegativeImg1ActionPerformed(evt);
+            }
+        });
+        jMenu4.add(NegativeImg1);
 
         jMenu2.add(jMenu4);
 
-        Load.setText("Load...");
-        Load.addActionListener(new java.awt.event.ActionListener() {
+        LoadImg2.setText("Load img 2...");
+        LoadImg2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                LoadActionPerformed(evt);
+                LoadImg2ActionPerformed(evt);
             }
         });
-        jMenu2.add(Load);
+        jMenu2.add(LoadImg2);
 
-        jMenuItem3.setText("jMenuItem3");
-        jMenuItem3.addActionListener(new java.awt.event.ActionListener() {
+        jMenu5.setText("Edit img 2");
+
+        Negative2.setText("Negative");
+        Negative2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem3ActionPerformed(evt);
+                Negative2ActionPerformed(evt);
             }
         });
-        jMenu2.add(jMenuItem3);
+        jMenu5.add(Negative2);
+
+        jMenu2.add(jMenu5);
+
+        jMenu6.setText("Edit img 1 and 2");
+
+        Suma.setText("Suma");
+        Suma.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                SumaActionPerformed(evt);
+            }
+        });
+        jMenu6.add(Suma);
+
+        Resta12.setText("Resta 1 - 2");
+        Resta12.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                Resta12ActionPerformed(evt);
+            }
+        });
+        jMenu6.add(Resta12);
+
+        Resta21.setText("Resta 2 - 1");
+        jMenu6.add(Resta21);
+
+        jMenu2.add(jMenu6);
+
+        Save1.setText("Save img 1");
+        Save1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                Save1ActionPerformed(evt);
+            }
+        });
+        jMenu2.add(Save1);
 
         jMenuBar1.add(jMenu2);
 
@@ -99,40 +162,92 @@ public class MainJFrame extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void LoadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LoadActionPerformed
+    private void LoadImg1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LoadImg1ActionPerformed
         // TODO add your handling code here:
         final JFileChooser fc = new JFileChooser();
 //In response to a button click:
         fc.addActionListener(new ActionListener() {
-
             public void actionPerformed(ActionEvent e) {
                 BufferedImage img = null;
                 try {
                     img = ImageIO.read(fc.getSelectedFile());
-                    JFrame frame = new JFrame();
-
-JLabel lblimage = new JLabel(new ImageIcon(img));
-frame.getContentPane().add(lblimage, BorderLayout.CENTER);
-frame.setSize(img.getWidth(), img.getHeight());
-frame.setVisible(true);
+                    img1 = new EasyImage(img);
                 } catch (IOException ex) {
                     Logger.getLogger(MainJFrame.class.getName()).log(Level.SEVERE, null, ex);
                 }
-         
-        }      
+            }
         });
-    int returnVal = fc.showOpenDialog(Load);
-    
-        BufferedImage img = null;
+        fc.showOpenDialog(LoadImg1);
+
+    }//GEN-LAST:event_LoadImg1ActionPerformed
+
+    private void LoadImg2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LoadImg2ActionPerformed
+        final JFileChooser fc = new JFileChooser();
+//In response to a button click:
+        fc.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                BufferedImage img = null;
+                try {
+                    img = ImageIO.read(fc.getSelectedFile());
+                    img2 = new EasyImage(img);
+                } catch (IOException ex) {
+                    Logger.getLogger(MainJFrame.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        });
+        fc.showOpenDialog(LoadImg2);
+
+    }//GEN-LAST:event_LoadImg2ActionPerformed
+
+    private void NegativeImg1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_NegativeImg1ActionPerformed
+        img1.applyNegative();
+        img1.updateImg();
+        displayImage(img1.getImage());
+    }//GEN-LAST:event_NegativeImg1ActionPerformed
+
+    private void Negative2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Negative2ActionPerformed
+        img2.applyNegative();
+        img2.updateImg();
+        displayImage(img2.getImage());
+    }//GEN-LAST:event_Negative2ActionPerformed
+
+    private void SumaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SumaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_SumaActionPerformed
+
+    private void Resta12ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Resta12ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_Resta12ActionPerformed
+
+    private void Save1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Save1ActionPerformed
+        String fileName,type;
+        fileName = JOptionPane.showInputDialog("File name: ");
+        System.out.println("Se guarda el archivo: " + fileName);
+        String[] aux = fileName.split("\\.");
+//        String t="";
+//        for(String a:aux){
+//            t=a;
+//        }
+//        System.out.println("Se guarda el archivo: " + t);
+//        
+        type = aux[aux.length>0?aux.length-1:aux.length];
+//        type = "png";
         try {
-            img = ImageIO.read(new File(""));
+            // retrieve image
+            BufferedImage bi = img1.getImage();
+            File outputfile = new File("./" + fileName);
+            ImageIO.write(bi, type, outputfile);
         } catch (IOException e) {
         }
-    }//GEN-LAST:event_LoadActionPerformed
+    }//GEN-LAST:event_Save1ActionPerformed
 
-    private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jMenuItem3ActionPerformed
+    public void displayImage(BufferedImage img) {
+        JFrame frame = new JFrame();
+        JLabel lblimage = new JLabel(new ImageIcon(img));
+        frame.getContentPane().add(lblimage, BorderLayout.CENTER);
+        frame.setSize(img.getWidth(), img.getHeight());
+        frame.setVisible(true);
+    }
 
     /**
      * @param args the command line arguments
@@ -169,13 +284,21 @@ frame.setVisible(true);
         });
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JMenuItem Load;
+    private javax.swing.JMenuItem LoadImg1;
+    private javax.swing.JMenuItem LoadImg2;
+    private javax.swing.JMenuItem Negative2;
+    private javax.swing.JMenuItem NegativeImg1;
+    private javax.swing.JMenuItem Resta12;
+    private javax.swing.JMenuItem Resta21;
+    private javax.swing.JMenuItem Save1;
+    private javax.swing.JMenuItem Suma;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenu jMenu3;
     private javax.swing.JMenu jMenu4;
+    private javax.swing.JMenu jMenu5;
+    private javax.swing.JMenu jMenu6;
     private javax.swing.JMenuBar jMenuBar1;
-    private javax.swing.JMenuItem jMenuItem2;
-    private javax.swing.JMenuItem jMenuItem3;
+    private javax.swing.JMenuItem jMenuItem1;
     // End of variables declaration//GEN-END:variables
 }
