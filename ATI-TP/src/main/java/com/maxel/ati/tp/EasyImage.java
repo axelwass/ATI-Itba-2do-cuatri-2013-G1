@@ -94,7 +94,7 @@ public class EasyImage {
         }
         max = max - min;
         for (int i = 0; i < channel.length; i++) {
-            channel[i] = ((channel[i] - min) / max) * 255;
+            channel[i] = ((channel[i] - min) * 255) / max;
         }
     }
 

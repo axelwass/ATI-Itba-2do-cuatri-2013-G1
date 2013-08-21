@@ -185,6 +185,7 @@ public class MainJFrame extends javax.swing.JFrame {
         // TODO add your handling code here:
         final JFileChooser fc = new JFileChooser();
         fc.addChoosableFileFilter(new ImgFileFilter());
+        fc.setAcceptAllFileFilterUsed(false);
 //In response to a button click:
         fc.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
