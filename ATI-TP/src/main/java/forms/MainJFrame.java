@@ -19,6 +19,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.filechooser.FileFilter;
 
 /**
  *
@@ -51,7 +52,9 @@ public class MainJFrame extends javax.swing.JFrame {
         jMenu2 = new javax.swing.JMenu();
         LoadImg1 = new javax.swing.JMenuItem();
         jMenu4 = new javax.swing.JMenu();
+        Show = new javax.swing.JMenuItem();
         NegativeImg1 = new javax.swing.JMenuItem();
+        Normalize = new javax.swing.JMenuItem();
         LoadImg2 = new javax.swing.JMenuItem();
         jMenu5 = new javax.swing.JMenu();
         Negative2 = new javax.swing.JMenuItem();
@@ -80,6 +83,14 @@ public class MainJFrame extends javax.swing.JFrame {
 
         jMenu4.setText("Edit img 1");
 
+        Show.setText("Show");
+        Show.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ShowActionPerformed(evt);
+            }
+        });
+        jMenu4.add(Show);
+
         NegativeImg1.setText("Negative");
         NegativeImg1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -87,6 +98,14 @@ public class MainJFrame extends javax.swing.JFrame {
             }
         });
         jMenu4.add(NegativeImg1);
+
+        Normalize.setText("Normalize");
+        Normalize.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                NormalizeActionPerformed(evt);
+            }
+        });
+        jMenu4.add(Normalize);
 
         jMenu2.add(jMenu4);
 
@@ -165,6 +184,7 @@ public class MainJFrame extends javax.swing.JFrame {
     private void LoadImg1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LoadImg1ActionPerformed
         // TODO add your handling code here:
         final JFileChooser fc = new JFileChooser();
+        fc.addChoosableFileFilter(new ImgFileFilter());
 //In response to a button click:
         fc.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -183,6 +203,7 @@ public class MainJFrame extends javax.swing.JFrame {
 
     private void LoadImg2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LoadImg2ActionPerformed
         final JFileChooser fc = new JFileChooser();
+        fc.addChoosableFileFilter(new ImgFileFilter());
 //In response to a button click:
         fc.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -212,7 +233,8 @@ public class MainJFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_Negative2ActionPerformed
 
     private void SumaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SumaActionPerformed
-        // TODO add your handling code here:
+        img1.add(img2);
+        displayImage(img1.getImage());
     }//GEN-LAST:event_SumaActionPerformed
 
     private void Resta12ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Resta12ActionPerformed
@@ -240,6 +262,15 @@ public class MainJFrame extends javax.swing.JFrame {
         } catch (IOException e) {
         }
     }//GEN-LAST:event_Save1ActionPerformed
+
+    private void NormalizeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_NormalizeActionPerformed
+        img1.normalize();
+        displayImage(img1.getImage());
+    }//GEN-LAST:event_NormalizeActionPerformed
+
+    private void ShowActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ShowActionPerformed
+        displayImage(img1.getImage());
+    }//GEN-LAST:event_ShowActionPerformed
 
     public void displayImage(BufferedImage img) {
         JFrame frame = new JFrame();
@@ -288,9 +319,11 @@ public class MainJFrame extends javax.swing.JFrame {
     private javax.swing.JMenuItem LoadImg2;
     private javax.swing.JMenuItem Negative2;
     private javax.swing.JMenuItem NegativeImg1;
+    private javax.swing.JMenuItem Normalize;
     private javax.swing.JMenuItem Resta12;
     private javax.swing.JMenuItem Resta21;
     private javax.swing.JMenuItem Save1;
+    private javax.swing.JMenuItem Show;
     private javax.swing.JMenuItem Suma;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
