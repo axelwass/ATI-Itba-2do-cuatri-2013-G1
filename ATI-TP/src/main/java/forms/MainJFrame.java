@@ -184,8 +184,10 @@ public class MainJFrame extends javax.swing.JFrame {
     private void LoadImg1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LoadImg1ActionPerformed
         // TODO add your handling code here:
         final JFileChooser fc = new JFileChooser();
-        fc.addChoosableFileFilter(new ImgFileFilter());
         fc.setAcceptAllFileFilterUsed(false);
+        fc.addChoosableFileFilter(new ImgFileFilter());
+        
+        
 //In response to a button click:
         fc.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -204,6 +206,7 @@ public class MainJFrame extends javax.swing.JFrame {
 
     private void LoadImg2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LoadImg2ActionPerformed
         final JFileChooser fc = new JFileChooser();
+        fc.setAcceptAllFileFilterUsed(false);
         fc.addChoosableFileFilter(new ImgFileFilter());
 //In response to a button click:
         fc.addActionListener(new ActionListener() {
