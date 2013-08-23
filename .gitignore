@@ -5,3 +5,4 @@
 *.war
 *.ear
 /ATI-TP/target/
+.DS_Store

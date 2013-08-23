@@ -6,6 +6,7 @@ package forms;
 
 import com.maxel.ati.tp.EasyImage;
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
@@ -50,11 +51,19 @@ public class MainJFrame extends javax.swing.JFrame {
         jMenuItem1 = new javax.swing.JMenuItem();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu2 = new javax.swing.JMenu();
+        jMenu7 = new javax.swing.JMenu();
         LoadImg1 = new javax.swing.JMenuItem();
+        Circle = new javax.swing.JMenuItem();
+        Square = new javax.swing.JMenuItem();
+        ColorDegradee = new javax.swing.JMenuItem();
+        BWDegradee = new javax.swing.JMenuItem();
         jMenu4 = new javax.swing.JMenu();
         Show = new javax.swing.JMenuItem();
         NegativeImg1 = new javax.swing.JMenuItem();
         Normalize = new javax.swing.JMenuItem();
+        GenHistorgram1 = new javax.swing.JMenuItem();
+        Multiply1 = new javax.swing.JMenuItem();
+        DRC1 = new javax.swing.JMenuItem();
         LoadImg2 = new javax.swing.JMenuItem();
         jMenu5 = new javax.swing.JMenu();
         Negative2 = new javax.swing.JMenuItem();
@@ -73,13 +82,49 @@ public class MainJFrame extends javax.swing.JFrame {
 
         jMenu2.setText("File");
 
-        LoadImg1.setText("Load img 1...");
+        jMenu7.setText("Image 1");
+
+        LoadImg1.setText("File...");
         LoadImg1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 LoadImg1ActionPerformed(evt);
             }
         });
-        jMenu2.add(LoadImg1);
+        jMenu7.add(LoadImg1);
+
+        Circle.setText("Circle");
+        Circle.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                CircleActionPerformed(evt);
+            }
+        });
+        jMenu7.add(Circle);
+
+        Square.setText("Square");
+        Square.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                SquareActionPerformed(evt);
+            }
+        });
+        jMenu7.add(Square);
+
+        ColorDegradee.setText("Color Degradee");
+        ColorDegradee.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ColorDegradeeActionPerformed(evt);
+            }
+        });
+        jMenu7.add(ColorDegradee);
+
+        BWDegradee.setText("B&W Degradee");
+        BWDegradee.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BWDegradeeActionPerformed(evt);
+            }
+        });
+        jMenu7.add(BWDegradee);
+
+        jMenu2.add(jMenu7);
 
         jMenu4.setText("Edit img 1");
 
@@ -106,6 +151,30 @@ public class MainJFrame extends javax.swing.JFrame {
             }
         });
         jMenu4.add(Normalize);
+
+        GenHistorgram1.setText("Histogram");
+        GenHistorgram1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                GenHistorgram1ActionPerformed(evt);
+            }
+        });
+        jMenu4.add(GenHistorgram1);
+
+        Multiply1.setText("Multiply");
+        Multiply1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                Multiply1ActionPerformed(evt);
+            }
+        });
+        jMenu4.add(Multiply1);
+
+        DRC1.setText("DRC");
+        DRC1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                DRC1ActionPerformed(evt);
+            }
+        });
+        jMenu4.add(DRC1);
 
         jMenu2.add(jMenu4);
 
@@ -148,6 +217,11 @@ public class MainJFrame extends javax.swing.JFrame {
         jMenu6.add(Resta12);
 
         Resta21.setText("Resta 2 - 1");
+        Resta21.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                Resta21ActionPerformed(evt);
+            }
+        });
         jMenu6.add(Resta21);
 
         jMenu2.add(jMenu6);
@@ -227,22 +301,23 @@ public class MainJFrame extends javax.swing.JFrame {
     private void NegativeImg1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_NegativeImg1ActionPerformed
         img1.applyNegative();
         img1.updateImg();
-        displayImage(img1.getImage());
+        displayImage(img1.getBufferedImage());
     }//GEN-LAST:event_NegativeImg1ActionPerformed
 
     private void Negative2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Negative2ActionPerformed
         img2.applyNegative();
         img2.updateImg();
-        displayImage(img2.getImage());
+        displayImage(img2.getBufferedImage());
     }//GEN-LAST:event_Negative2ActionPerformed
 
     private void SumaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SumaActionPerformed
         img1.add(img2);
-        displayImage(img1.getImage());
+        displayImage(img1.getBufferedImage());
     }//GEN-LAST:event_SumaActionPerformed
 
     private void Resta12ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Resta12ActionPerformed
-        // TODO add your handling code here:
+        img1.substract(img2);
+        displayImage(img1.getBufferedImage());
     }//GEN-LAST:event_Resta12ActionPerformed
 
     private void Save1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Save1ActionPerformed
@@ -260,7 +335,7 @@ public class MainJFrame extends javax.swing.JFrame {
 //        type = "png";
         try {
             // retrieve image
-            BufferedImage bi = img1.getImage();
+            BufferedImage bi = img1.getBufferedImage();
             File outputfile = new File("./" + fileName);
             ImageIO.write(bi, type, outputfile);
         } catch (IOException e) {
@@ -269,12 +344,52 @@ public class MainJFrame extends javax.swing.JFrame {
 
     private void NormalizeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_NormalizeActionPerformed
         img1.normalize();
-        displayImage(img1.getImage());
+        displayImage(img1.getBufferedImage());
     }//GEN-LAST:event_NormalizeActionPerformed
 
     private void ShowActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ShowActionPerformed
-        displayImage(img1.getImage());
+        displayImage(img1.getBufferedImage());
     }//GEN-LAST:event_ShowActionPerformed
+
+    private void Resta21ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Resta21ActionPerformed
+        img2.substract(img1);
+        displayImage(img2.getBufferedImage());
+    }//GEN-LAST:event_Resta21ActionPerformed
+
+    private void CircleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CircleActionPerformed
+        img1 = EasyImage.newCircle(200, 200);
+        displayImage(img1.getBufferedImage());
+    }//GEN-LAST:event_CircleActionPerformed
+
+    private void SquareActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SquareActionPerformed
+        img1 = EasyImage.newSquare(200, 200);
+        displayImage(img1.getBufferedImage());
+    }//GEN-LAST:event_SquareActionPerformed
+
+    private void ColorDegradeeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ColorDegradeeActionPerformed
+        img1 = EasyImage.newColorDegradee(200, 200, Color.red.getRGB(), Color.white.getRGB());
+        displayImage(img1.getBufferedImage());
+    }//GEN-LAST:event_ColorDegradeeActionPerformed
+
+    private void BWDegradeeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BWDegradeeActionPerformed
+        img1 = EasyImage.newColorDegradee(200, 200, Color.white.getRGB(), Color.black.getRGB());
+        displayImage(img1.getBufferedImage());
+    }//GEN-LAST:event_BWDegradeeActionPerformed
+
+    private void GenHistorgram1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_GenHistorgram1ActionPerformed
+        displayImage(EasyImage.generateHistogram(img1));
+    }//GEN-LAST:event_GenHistorgram1ActionPerformed
+
+    private void Multiply1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Multiply1ActionPerformed
+        int factor = Integer.valueOf(JOptionPane.showInputDialog("Factor: "));
+        img1.multiply(factor);
+        displayImage(img1.getBufferedImage());
+    }//GEN-LAST:event_Multiply1ActionPerformed
+
+    private void DRC1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DRC1ActionPerformed
+        img1.dynamicRangeCompress();
+        displayImage(img1.getBufferedImage());
+    }//GEN-LAST:event_DRC1ActionPerformed
 
     public void displayImage(BufferedImage img) {
         JFrame frame = new JFrame();
@@ -319,8 +434,14 @@ public class MainJFrame extends javax.swing.JFrame {
         });
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JMenuItem BWDegradee;
+    private javax.swing.JMenuItem Circle;
+    private javax.swing.JMenuItem ColorDegradee;
+    private javax.swing.JMenuItem DRC1;
+    private javax.swing.JMenuItem GenHistorgram1;
     private javax.swing.JMenuItem LoadImg1;
     private javax.swing.JMenuItem LoadImg2;
+    private javax.swing.JMenuItem Multiply1;
     private javax.swing.JMenuItem Negative2;
     private javax.swing.JMenuItem NegativeImg1;
     private javax.swing.JMenuItem Normalize;
@@ -328,6 +449,7 @@ public class MainJFrame extends javax.swing.JFrame {
     private javax.swing.JMenuItem Resta21;
     private javax.swing.JMenuItem Save1;
     private javax.swing.JMenuItem Show;
+    private javax.swing.JMenuItem Square;
     private javax.swing.JMenuItem Suma;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
@@ -335,6 +457,7 @@ public class MainJFrame extends javax.swing.JFrame {
     private javax.swing.JMenu jMenu4;
     private javax.swing.JMenu jMenu5;
     private javax.swing.JMenu jMenu6;
+    private javax.swing.JMenu jMenu7;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
     // End of variables declaration//GEN-END:variables
