@@ -5,8 +5,12 @@
 package forms;
 
 import com.maxel.ati.tp.EasyImage;
+import com.maxel.ati.tp.Mask;
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Image;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
@@ -15,12 +19,15 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
+import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.filechooser.FileFilter;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
 
 /**
  *
@@ -49,6 +56,10 @@ public class MainJFrame extends javax.swing.JFrame {
 
         jMenu1 = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
+        jMenuItem2 = new javax.swing.JMenuItem();
+        jMenuItem3 = new javax.swing.JMenuItem();
+        jMenuItem4 = new javax.swing.JMenuItem();
+        jMenu8 = new javax.swing.JMenu();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu2 = new javax.swing.JMenu();
         jMenu7 = new javax.swing.JMenu();
@@ -57,26 +68,67 @@ public class MainJFrame extends javax.swing.JFrame {
         Square = new javax.swing.JMenuItem();
         ColorDegradee = new javax.swing.JMenuItem();
         BWDegradee = new javax.swing.JMenuItem();
+        Gauss = new javax.swing.JMenuItem();
+        Rayleigh = new javax.swing.JMenuItem();
+        Exponential = new javax.swing.JMenuItem();
+        JMenu8 = new javax.swing.JMenu();
+        LoadImg2 = new javax.swing.JMenuItem();
+        Circle2 = new javax.swing.JMenuItem();
+        Square2 = new javax.swing.JMenuItem();
+        ColorDegradee2 = new javax.swing.JMenuItem();
+        BWDegradee2 = new javax.swing.JMenuItem();
+        SwapImgs = new javax.swing.JMenuItem();
+        Save1 = new javax.swing.JMenuItem();
+        Save2 = new javax.swing.JMenuItem();
         jMenu4 = new javax.swing.JMenu();
-        Show = new javax.swing.JMenuItem();
+        Show1 = new javax.swing.JMenuItem();
+        toGrey1 = new javax.swing.JMenuItem();
         NegativeImg1 = new javax.swing.JMenuItem();
-        Normalize = new javax.swing.JMenuItem();
+        Normalize1 = new javax.swing.JMenuItem();
         GenHistorgram1 = new javax.swing.JMenuItem();
         Multiply1 = new javax.swing.JMenuItem();
         DRC1 = new javax.swing.JMenuItem();
-        LoadImg2 = new javax.swing.JMenuItem();
+        Contrast1 = new javax.swing.JMenuItem();
+        Umbral1 = new javax.swing.JMenuItem();
+        Equalize1 = new javax.swing.JMenuItem();
+        getSubImage = new javax.swing.JMenuItem();
+        jMenu3 = new javax.swing.JMenu();
+        AddGauss = new javax.swing.JMenuItem();
+        AddRayleigh = new javax.swing.JMenuItem();
+        AddExponential = new javax.swing.JMenuItem();
+        SaltNPepper = new javax.swing.JMenuItem();
+        SaltNPepperBW = new javax.swing.JMenuItem();
+        jMenu9 = new javax.swing.JMenu();
+        Mean = new javax.swing.JMenuItem();
+        MedianFilter = new javax.swing.JMenuItem();
+        BorderAmp = new javax.swing.JMenuItem();
         jMenu5 = new javax.swing.JMenu();
-        Negative2 = new javax.swing.JMenuItem();
+        Show2 = new javax.swing.JMenuItem();
+        toGrey2 = new javax.swing.JMenuItem();
+        NegativeImg2 = new javax.swing.JMenuItem();
+        Normalize2 = new javax.swing.JMenuItem();
+        GenHistorgram2 = new javax.swing.JMenuItem();
+        Multiply2 = new javax.swing.JMenuItem();
+        DRC2 = new javax.swing.JMenuItem();
+        Contrast2 = new javax.swing.JMenuItem();
+        Umbral2 = new javax.swing.JMenuItem();
+        Equalize2 = new javax.swing.JMenuItem();
         jMenu6 = new javax.swing.JMenu();
         Suma = new javax.swing.JMenuItem();
         Resta12 = new javax.swing.JMenuItem();
         Resta21 = new javax.swing.JMenuItem();
-        Save1 = new javax.swing.JMenuItem();
-        jMenu3 = new javax.swing.JMenu();
 
         jMenu1.setText("jMenu1");
 
         jMenuItem1.setText("jMenuItem1");
+
+        jMenuItem2.setText("jMenuItem2");
+
+        jMenuItem3.setText("jMenuItem3");
+
+        jMenuItem4.setText("jMenuItem4");
+
+        jMenu8.setText("jMenu8");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -124,17 +176,119 @@ public class MainJFrame extends javax.swing.JFrame {
         });
         jMenu7.add(BWDegradee);
 
+        Gauss.setText("Gauss");
+        Gauss.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                GaussActionPerformed(evt);
+            }
+        });
+        jMenu7.add(Gauss);
+
+        Rayleigh.setText("Rayleigh");
+        Rayleigh.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                RayleighActionPerformed(evt);
+            }
+        });
+        jMenu7.add(Rayleigh);
+
+        Exponential.setText("Exponential");
+        Exponential.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ExponentialActionPerformed(evt);
+            }
+        });
+        jMenu7.add(Exponential);
+
         jMenu2.add(jMenu7);
+
+        JMenu8.setText("Image 2");
+
+        LoadImg2.setText("File...");
+        LoadImg2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                LoadImg2ActionPerformed(evt);
+            }
+        });
+        JMenu8.add(LoadImg2);
+
+        Circle2.setText("Circle");
+        Circle2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                Circle2ActionPerformed(evt);
+            }
+        });
+        JMenu8.add(Circle2);
+
+        Square2.setText("Square");
+        Square2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                Square2ActionPerformed(evt);
+            }
+        });
+        JMenu8.add(Square2);
+
+        ColorDegradee2.setText("Color Degradee");
+        ColorDegradee2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ColorDegradee2ActionPerformed(evt);
+            }
+        });
+        JMenu8.add(ColorDegradee2);
+
+        BWDegradee2.setText("B&W Degradee");
+        BWDegradee2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BWDegradee2ActionPerformed(evt);
+            }
+        });
+        JMenu8.add(BWDegradee2);
+
+        jMenu2.add(JMenu8);
+
+        SwapImgs.setText("Swap img1 & 2");
+        SwapImgs.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                SwapImgsActionPerformed(evt);
+            }
+        });
+        jMenu2.add(SwapImgs);
+
+        Save1.setText("Save img 1");
+        Save1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                Save1ActionPerformed(evt);
+            }
+        });
+        jMenu2.add(Save1);
+
+        Save2.setText("Save img 2");
+        Save2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                Save2ActionPerformed(evt);
+            }
+        });
+        jMenu2.add(Save2);
+
+        jMenuBar1.add(jMenu2);
 
         jMenu4.setText("Edit img 1");
 
-        Show.setText("Show");
-        Show.addActionListener(new java.awt.event.ActionListener() {
+        Show1.setText("Show");
+        Show1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ShowActionPerformed(evt);
+                Show1ActionPerformed(evt);
             }
         });
-        jMenu4.add(Show);
+        jMenu4.add(Show1);
+
+        toGrey1.setText("To Grey");
+        toGrey1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                toGrey1ActionPerformed(evt);
+            }
+        });
+        jMenu4.add(toGrey1);
 
         NegativeImg1.setText("Negative");
         NegativeImg1.addActionListener(new java.awt.event.ActionListener() {
@@ -144,13 +298,13 @@ public class MainJFrame extends javax.swing.JFrame {
         });
         jMenu4.add(NegativeImg1);
 
-        Normalize.setText("Normalize");
-        Normalize.addActionListener(new java.awt.event.ActionListener() {
+        Normalize1.setText("Normalize");
+        Normalize1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                NormalizeActionPerformed(evt);
+                Normalize1ActionPerformed(evt);
             }
         });
-        jMenu4.add(Normalize);
+        jMenu4.add(Normalize1);
 
         GenHistorgram1.setText("Histogram");
         GenHistorgram1.addActionListener(new java.awt.event.ActionListener() {
@@ -176,27 +330,195 @@ public class MainJFrame extends javax.swing.JFrame {
         });
         jMenu4.add(DRC1);
 
-        jMenu2.add(jMenu4);
-
-        LoadImg2.setText("Load img 2...");
-        LoadImg2.addActionListener(new java.awt.event.ActionListener() {
+        Contrast1.setText("Contrast...");
+        Contrast1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                LoadImg2ActionPerformed(evt);
+                Contrast1ActionPerformed(evt);
             }
         });
-        jMenu2.add(LoadImg2);
+        jMenu4.add(Contrast1);
+
+        Umbral1.setText("Umbral");
+        Umbral1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                Umbral1ActionPerformed(evt);
+            }
+        });
+        jMenu4.add(Umbral1);
+
+        Equalize1.setText("Equalize");
+        Equalize1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                Equalize1ActionPerformed(evt);
+            }
+        });
+        jMenu4.add(Equalize1);
+
+        getSubImage.setText("SubImage a img 2");
+        getSubImage.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                getSubImageActionPerformed(evt);
+            }
+        });
+        jMenu4.add(getSubImage);
+
+        jMenu3.setText("Add Noise");
+
+        AddGauss.setText("Gauss");
+        AddGauss.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                AddGaussActionPerformed(evt);
+            }
+        });
+        jMenu3.add(AddGauss);
+
+        AddRayleigh.setText("Rayleigh");
+        AddRayleigh.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                AddRayleighActionPerformed(evt);
+            }
+        });
+        jMenu3.add(AddRayleigh);
+
+        AddExponential.setText("Exponential");
+        AddExponential.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                AddExponentialActionPerformed(evt);
+            }
+        });
+        jMenu3.add(AddExponential);
+
+        SaltNPepper.setText("Salt & Pepper Color");
+        SaltNPepper.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                SaltNPepperActionPerformed(evt);
+            }
+        });
+        jMenu3.add(SaltNPepper);
+
+        SaltNPepperBW.setText("Salt & Pepper BW");
+        SaltNPepperBW.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                SaltNPepperBWActionPerformed(evt);
+            }
+        });
+        jMenu3.add(SaltNPepperBW);
+
+        jMenu4.add(jMenu3);
+
+        jMenu9.setText("Apply filter");
+
+        Mean.setText("Mean...");
+        Mean.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                MeanActionPerformed(evt);
+            }
+        });
+        jMenu9.add(Mean);
+
+        MedianFilter.setText("Median...");
+        MedianFilter.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                MedianFilterActionPerformed(evt);
+            }
+        });
+        jMenu9.add(MedianFilter);
+
+        BorderAmp.setText("Border Amp...");
+        BorderAmp.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BorderAmpActionPerformed(evt);
+            }
+        });
+        jMenu9.add(BorderAmp);
+
+        jMenu4.add(jMenu9);
+
+        jMenuBar1.add(jMenu4);
 
         jMenu5.setText("Edit img 2");
 
-        Negative2.setText("Negative");
-        Negative2.addActionListener(new java.awt.event.ActionListener() {
+        Show2.setText("Show");
+        Show2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                Negative2ActionPerformed(evt);
+                Show2ActionPerformed(evt);
             }
         });
-        jMenu5.add(Negative2);
+        jMenu5.add(Show2);
 
-        jMenu2.add(jMenu5);
+        toGrey2.setText("To Grey");
+        toGrey2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                toGrey2ActionPerformed(evt);
+            }
+        });
+        jMenu5.add(toGrey2);
+
+        NegativeImg2.setText("Negative");
+        NegativeImg2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                NegativeImg2ActionPerformed(evt);
+            }
+        });
+        jMenu5.add(NegativeImg2);
+
+        Normalize2.setText("Normalize");
+        Normalize2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                Normalize2ActionPerformed(evt);
+            }
+        });
+        jMenu5.add(Normalize2);
+
+        GenHistorgram2.setText("Histogram");
+        GenHistorgram2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                GenHistorgram2ActionPerformed(evt);
+            }
+        });
+        jMenu5.add(GenHistorgram2);
+
+        Multiply2.setText("Multiply");
+        Multiply2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                Multiply2ActionPerformed(evt);
+            }
+        });
+        jMenu5.add(Multiply2);
+
+        DRC2.setText("DRC");
+        DRC2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                DRC2ActionPerformed(evt);
+            }
+        });
+        jMenu5.add(DRC2);
+
+        Contrast2.setText("Contrast...");
+        Contrast2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                Contrast2ActionPerformed(evt);
+            }
+        });
+        jMenu5.add(Contrast2);
+
+        Umbral2.setText("Umbral");
+        Umbral2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                Umbral2ActionPerformed(evt);
+            }
+        });
+        jMenu5.add(Umbral2);
+
+        Equalize2.setText("Equalize");
+        Equalize2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                Equalize2ActionPerformed(evt);
+            }
+        });
+        jMenu5.add(Equalize2);
+
+        jMenuBar1.add(jMenu5);
 
         jMenu6.setText("Edit img 1 and 2");
 
@@ -224,20 +546,7 @@ public class MainJFrame extends javax.swing.JFrame {
         });
         jMenu6.add(Resta21);
 
-        jMenu2.add(jMenu6);
-
-        Save1.setText("Save img 1");
-        Save1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                Save1ActionPerformed(evt);
-            }
-        });
-        jMenu2.add(Save1);
-
-        jMenuBar1.add(jMenu2);
-
-        jMenu3.setText("Edit");
-        jMenuBar1.add(jMenu3);
+        jMenuBar1.add(jMenu6);
 
         setJMenuBar(jMenuBar1);
 
@@ -256,12 +565,11 @@ public class MainJFrame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void LoadImg1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LoadImg1ActionPerformed
-        // TODO add your handling code here:
         final JFileChooser fc = new JFileChooser();
         fc.setAcceptAllFileFilterUsed(false);
         fc.addChoosableFileFilter(new ImgFileFilter());
-        
-        
+
+
 //In response to a button click:
         fc.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -278,37 +586,11 @@ public class MainJFrame extends javax.swing.JFrame {
 
     }//GEN-LAST:event_LoadImg1ActionPerformed
 
-    private void LoadImg2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LoadImg2ActionPerformed
-        final JFileChooser fc = new JFileChooser();
-        fc.setAcceptAllFileFilterUsed(false);
-        fc.addChoosableFileFilter(new ImgFileFilter());
-//In response to a button click:
-        fc.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                BufferedImage img = null;
-                try {
-                    img = ImageIO.read(fc.getSelectedFile());
-                    img2 = new EasyImage(img);
-                } catch (IOException ex) {
-                    Logger.getLogger(MainJFrame.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
-        });
-        fc.showOpenDialog(LoadImg2);
-
-    }//GEN-LAST:event_LoadImg2ActionPerformed
-
     private void NegativeImg1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_NegativeImg1ActionPerformed
         img1.applyNegative();
         img1.updateImg();
         displayImage(img1.getBufferedImage());
     }//GEN-LAST:event_NegativeImg1ActionPerformed
-
-    private void Negative2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Negative2ActionPerformed
-        img2.applyNegative();
-        img2.updateImg();
-        displayImage(img2.getBufferedImage());
-    }//GEN-LAST:event_Negative2ActionPerformed
 
     private void SumaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SumaActionPerformed
         img1.add(img2);
@@ -321,7 +603,7 @@ public class MainJFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_Resta12ActionPerformed
 
     private void Save1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Save1ActionPerformed
-        String fileName,type;
+        String fileName, type;
         fileName = JOptionPane.showInputDialog("File name: ");
         System.out.println("Se guarda el archivo: " + fileName);
         String[] aux = fileName.split("\\.");
@@ -331,7 +613,7 @@ public class MainJFrame extends javax.swing.JFrame {
 //        }
 //        System.out.println("Se guarda el archivo: " + t);
 //        
-        type = aux[aux.length>0?aux.length-1:aux.length];
+        type = aux[aux.length > 0 ? aux.length - 1 : aux.length];
 //        type = "png";
         try {
             // retrieve image
@@ -342,14 +624,14 @@ public class MainJFrame extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_Save1ActionPerformed
 
-    private void NormalizeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_NormalizeActionPerformed
+    private void Normalize1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Normalize1ActionPerformed
         img1.normalize();
         displayImage(img1.getBufferedImage());
-    }//GEN-LAST:event_NormalizeActionPerformed
+    }//GEN-LAST:event_Normalize1ActionPerformed
 
-    private void ShowActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ShowActionPerformed
+    private void Show1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Show1ActionPerformed
         displayImage(img1.getBufferedImage());
-    }//GEN-LAST:event_ShowActionPerformed
+    }//GEN-LAST:event_Show1ActionPerformed
 
     private void Resta21ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Resta21ActionPerformed
         img2.substract(img1);
@@ -390,6 +672,1000 @@ public class MainJFrame extends javax.swing.JFrame {
         img1.dynamicRangeCompress();
         displayImage(img1.getBufferedImage());
     }//GEN-LAST:event_DRC1ActionPerformed
+
+    private void Contrast1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Contrast1ActionPerformed
+        final JFrame frame = new JFrame();
+//        frame.getContentPane().add(lblimage, BorderLayout.CENTER);
+//        frame.setSize(img.getWidth(), img.getHeight());
+        frame.setVisible(true);
+        frame.setTitle("Añadir contraste");
+        frame.setBounds(1, 1, 250, 230);
+        Toolkit toolkit = getToolkit();
+        Dimension size = toolkit.getScreenSize();
+        frame.setLocation(size.width / 3 - getWidth() / 3, size.height / 3
+                - getHeight() / 3);
+        frame.setResizable(true);
+        frame.setLayout(null);
+
+        JPanel pan1 = new JPanel();
+        pan1.setBorder(BorderFactory.createTitledBorder("Valores en eje r"));
+        pan1.setBounds(0, 0, 250, 80);
+
+        JPanel pan2 = new JPanel();
+        pan2.setBorder(BorderFactory.createTitledBorder("Valores en eje y"));
+        pan2.setBounds(0, 80, 250, 80);
+
+        JLabel r1Label = new JLabel("r1 = ");
+        final JTextField r1Field = new JTextField("0");
+        r1Field.setColumns(3);
+
+        JLabel r2Label = new JLabel("r2 = ");
+        final JTextField r2Field = new JTextField("0");
+        r2Field.setColumns(3);
+
+        JLabel newR1Label = new JLabel("y1 = ");
+        final JTextField y1Field = new JTextField("0");
+        y1Field.setColumns(3);
+
+        JLabel newR2Label = new JLabel("y2 = ");
+        final JTextField y2Field = new JTextField("0");
+        y2Field.setColumns(3);
+
+        JButton okButton = new JButton("OK");
+        okButton.setSize(250, 40);
+        okButton.setBounds(0, 160, 250, 40);
+        okButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                int r1;
+                int r2;
+                int y1;
+                int y2;
+
+                try {
+                    r1 = Integer.valueOf(r1Field.getText());
+                    r2 = Integer.valueOf(r2Field.getText());
+                    y1 = Integer.valueOf(y1Field.getText());
+                    y2 = Integer.valueOf(y2Field.getText());
+
+                } catch (NumberFormatException ex) {
+                    System.out.println("Los datos ingresados son invalidos");
+                    return;
+                }
+
+                if (!(r1 > y1) || !(r2 < y2)) {
+                    System.out.println("r1 debe ser menor a y1, y r2 menor a y2");
+                    return;
+                }
+                img1.applyContrast(r1, r2, y1, y2);
+                displayImage(img1.getBufferedImage());
+                frame.dispose();
+
+            }
+        });
+
+        pan1.add(r1Label);
+        pan1.add(r1Field);
+        pan1.add(r2Label);
+        pan1.add(r2Field);
+
+        pan2.add(newR1Label);
+        pan2.add(y1Field);
+        pan2.add(newR2Label);
+        pan2.add(y2Field);
+
+        frame.add(pan1);
+        frame.add(pan2);
+        frame.add(okButton);
+
+    }//GEN-LAST:event_Contrast1ActionPerformed
+
+    private void Umbral1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Umbral1ActionPerformed
+        int umbral = Integer.valueOf(JOptionPane.showInputDialog("Umbral: "));
+        img1.umbral(umbral);
+        displayImage(img1.getBufferedImage());
+    }//GEN-LAST:event_Umbral1ActionPerformed
+
+    private void LoadImg2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LoadImg2ActionPerformed
+        final JFileChooser fc = new JFileChooser();
+        fc.setAcceptAllFileFilterUsed(false);
+        fc.addChoosableFileFilter(new ImgFileFilter());
+
+
+//In response to a button click:
+        fc.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                BufferedImage img = null;
+                try {
+                    img = ImageIO.read(fc.getSelectedFile());
+                    img2 = new EasyImage(img);
+                } catch (IOException ex) {
+                    Logger.getLogger(MainJFrame.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        });
+        fc.showOpenDialog(LoadImg2);
+
+    }//GEN-LAST:event_LoadImg2ActionPerformed
+
+    private void Circle2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Circle2ActionPerformed
+        img2 = EasyImage.newCircle(200, 200);
+        displayImage(img2.getBufferedImage());
+    }//GEN-LAST:event_Circle2ActionPerformed
+
+    private void Square2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Square2ActionPerformed
+        img2 = EasyImage.newSquare(200, 200);
+        displayImage(img2.getBufferedImage());
+    }//GEN-LAST:event_Square2ActionPerformed
+
+    private void ColorDegradee2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ColorDegradee2ActionPerformed
+        img2 = EasyImage.newColorDegradee(200, 200, Color.red.getRGB(), Color.white.getRGB());
+        displayImage(img2.getBufferedImage());
+    }//GEN-LAST:event_ColorDegradee2ActionPerformed
+
+    private void BWDegradee2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BWDegradee2ActionPerformed
+        img2 = EasyImage.newColorDegradee(200, 200, Color.white.getRGB(), Color.black.getRGB());
+        displayImage(img2.getBufferedImage());
+    }//GEN-LAST:event_BWDegradee2ActionPerformed
+
+    private void Save2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Save2ActionPerformed
+        String fileName, type;
+        fileName = JOptionPane.showInputDialog("File name: ");
+        System.out.println("Se guarda el archivo: " + fileName);
+        String[] aux = fileName.split("\\.");
+//        String t="";
+//        for(String a:aux){
+//            t=a;
+//        }
+//        System.out.println("Se guarda el archivo: " + t);
+//        
+        type = aux[aux.length > 0 ? aux.length - 1 : aux.length];
+//        type = "png";
+        try {
+            // retrieve image
+            BufferedImage bi = img2.getBufferedImage();
+            File outputfile = new File("./" + fileName);
+            ImageIO.write(bi, type, outputfile);
+        } catch (IOException e) {
+        }
+    }//GEN-LAST:event_Save2ActionPerformed
+
+    private void Show2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Show2ActionPerformed
+        displayImage(img2.getBufferedImage());
+    }//GEN-LAST:event_Show2ActionPerformed
+
+    private void Umbral2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Umbral2ActionPerformed
+        int umbral = Integer.valueOf(JOptionPane.showInputDialog("Umbral: "));
+        img2.umbral(umbral);
+        displayImage(img2.getBufferedImage());
+    }//GEN-LAST:event_Umbral2ActionPerformed
+
+    private void NegativeImg2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_NegativeImg2ActionPerformed
+        img2.applyNegative();
+        img2.updateImg();
+        displayImage(img2.getBufferedImage());
+    }//GEN-LAST:event_NegativeImg2ActionPerformed
+
+    private void Normalize2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Normalize2ActionPerformed
+        img2.normalize();
+        displayImage(img2.getBufferedImage());
+    }//GEN-LAST:event_Normalize2ActionPerformed
+
+    private void GenHistorgram2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_GenHistorgram2ActionPerformed
+        displayImage(EasyImage.generateHistogram(img2));
+    }//GEN-LAST:event_GenHistorgram2ActionPerformed
+
+    private void Multiply2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Multiply2ActionPerformed
+        int factor = Integer.valueOf(JOptionPane.showInputDialog("Factor: "));
+        img2.multiply(factor);
+        displayImage(img2.getBufferedImage());
+    }//GEN-LAST:event_Multiply2ActionPerformed
+
+    private void DRC2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DRC2ActionPerformed
+        img2.dynamicRangeCompress();
+        displayImage(img2.getBufferedImage());
+    }//GEN-LAST:event_DRC2ActionPerformed
+
+    private void Contrast2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Contrast2ActionPerformed
+        final JFrame frame = new JFrame();
+//        frame.getContentPane().add(lblimage, BorderLayout.CENTER);
+//        frame.setSize(img.getWidth(), img.getHeight());
+        frame.setVisible(true);
+        frame.setTitle("Añadir contraste");
+        frame.setBounds(1, 1, 250, 230);
+        Toolkit toolkit = getToolkit();
+        Dimension size = toolkit.getScreenSize();
+        frame.setLocation(size.width / 3 - getWidth() / 3, size.height / 3
+                - getHeight() / 3);
+        frame.setResizable(true);
+        frame.setLayout(null);
+
+        JPanel pan1 = new JPanel();
+        pan1.setBorder(BorderFactory.createTitledBorder("Valores en eje r"));
+        pan1.setBounds(0, 0, 250, 80);
+
+        JPanel pan2 = new JPanel();
+        pan2.setBorder(BorderFactory.createTitledBorder("Valores en eje y"));
+        pan2.setBounds(0, 80, 250, 80);
+
+        JLabel r1Label = new JLabel("r1 = ");
+        final JTextField r1Field = new JTextField("0");
+        r1Field.setColumns(3);
+
+        JLabel r2Label = new JLabel("r2 = ");
+        final JTextField r2Field = new JTextField("0");
+        r2Field.setColumns(3);
+
+        JLabel newR1Label = new JLabel("y1 = ");
+        final JTextField y1Field = new JTextField("0");
+        y1Field.setColumns(3);
+
+        JLabel newR2Label = new JLabel("y2 = ");
+        final JTextField y2Field = new JTextField("0");
+        y2Field.setColumns(3);
+
+        JButton okButton = new JButton("OK");
+        okButton.setSize(250, 40);
+        okButton.setBounds(0, 160, 250, 40);
+        okButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                int r1;
+                int r2;
+                int y1;
+                int y2;
+
+                try {
+                    r1 = Integer.valueOf(r1Field.getText());
+                    r2 = Integer.valueOf(r2Field.getText());
+                    y1 = Integer.valueOf(y1Field.getText());
+                    y2 = Integer.valueOf(y2Field.getText());
+
+                } catch (NumberFormatException ex) {
+                    System.out.println("Los datos ingresados son invalidos");
+                    return;
+                }
+
+                if (!(r1 > y1) || !(r2 < y2)) {
+                    System.out.println("r1 debe ser menor a y1, y r2 menor a y2");
+                    return;
+                }
+                img2.applyContrast(r1, r2, y1, y2);
+                displayImage(img2.getBufferedImage());
+                frame.dispose();
+
+            }
+        });
+
+        pan1.add(r1Label);
+        pan1.add(r1Field);
+        pan1.add(r2Label);
+        pan1.add(r2Field);
+
+        pan2.add(newR1Label);
+        pan2.add(y1Field);
+        pan2.add(newR2Label);
+        pan2.add(y2Field);
+
+        frame.add(pan1);
+        frame.add(pan2);
+        frame.add(okButton);
+
+    }//GEN-LAST:event_Contrast2ActionPerformed
+
+    private void toGrey1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_toGrey1ActionPerformed
+        img1.toGrey();
+        displayImage(img1.getBufferedImage());
+    }//GEN-LAST:event_toGrey1ActionPerformed
+
+    private void toGrey2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_toGrey2ActionPerformed
+        img2.toGrey();
+        displayImage(img2.getBufferedImage());
+    }//GEN-LAST:event_toGrey2ActionPerformed
+
+    private void Equalize1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Equalize1ActionPerformed
+        img1.equalize();
+        displayImage(img1.getBufferedImage());
+    }//GEN-LAST:event_Equalize1ActionPerformed
+
+    private void Equalize2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Equalize2ActionPerformed
+        img2.equalize();
+        displayImage(img2.getBufferedImage());
+    }//GEN-LAST:event_Equalize2ActionPerformed
+
+    private void getSubImageActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_getSubImageActionPerformed
+        final JFrame frame = new JFrame();
+        frame.setVisible(true);
+        frame.setTitle("Obtener imagen interna");
+        frame.setBounds(1, 1, 250, 230);
+        Toolkit toolkit = getToolkit();
+        Dimension size = toolkit.getScreenSize();
+        frame.setLocation(size.width / 3 - getWidth() / 3, size.height / 3
+                - getHeight() / 3);
+        frame.setResizable(true);
+        frame.setLayout(null);
+
+        JPanel pan1 = new JPanel();
+        pan1.setBorder(BorderFactory.createTitledBorder("Valores de esquina superior izq."));
+        pan1.setBounds(0, 0, 250, 80);
+
+        JPanel pan2 = new JPanel();
+        pan2.setBorder(BorderFactory.createTitledBorder("Valores de esqina inferior derecha."));
+        pan2.setBounds(0, 80, 250, 80);
+
+        JLabel r1Label = new JLabel("x1 = ");
+        final JTextField r1Field = new JTextField("0");
+        r1Field.setColumns(3);
+
+        JLabel r2Label = new JLabel("y1 = ");
+        final JTextField r2Field = new JTextField("0");
+        r2Field.setColumns(3);
+
+        JLabel newR1Label = new JLabel("x2 = ");
+        final JTextField y1Field = new JTextField("0");
+        y1Field.setColumns(3);
+
+        JLabel newR2Label = new JLabel("y2 = ");
+        final JTextField y2Field = new JTextField("0");
+        y2Field.setColumns(3);
+
+        JButton okButton = new JButton("OK");
+        okButton.setSize(250, 40);
+        okButton.setBounds(0, 160, 250, 40);
+        okButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                int x1;
+                int y1;
+                int x2;
+                int y2;
+
+                try {
+                    x1 = Integer.valueOf(r1Field.getText());
+                    y1 = Integer.valueOf(r2Field.getText());
+                    x2 = Integer.valueOf(y1Field.getText());
+                    y2 = Integer.valueOf(y2Field.getText());
+
+                } catch (NumberFormatException ex) {
+                    System.out.println("Los datos ingresados son invalidos");
+                    return;
+                }
+
+                if (!(x1 < x2) || !(y1 < y2)) {
+                    System.out.println("La esquina inferior derecha es incorrecta");
+                    return;
+                }
+                img2 = img1.getSubImage(x1, y1, x2, y2);
+                displayImage(img2.getBufferedImage());
+                frame.dispose();
+
+            }
+        });
+
+        pan1.add(r1Label);
+        pan1.add(r1Field);
+        pan1.add(r2Label);
+        pan1.add(r2Field);
+
+        pan2.add(newR1Label);
+        pan2.add(y1Field);
+        pan2.add(newR2Label);
+        pan2.add(y2Field);
+
+        frame.add(pan1);
+        frame.add(pan2);
+        frame.add(okButton);
+
+    }//GEN-LAST:event_getSubImageActionPerformed
+
+    private void RayleighActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RayleighActionPerformed
+        final JFrame frame = new JFrame();
+        frame.setVisible(true);
+        frame.setTitle("Obtener imagen interna");
+        frame.setBounds(1, 1, 250, 230);
+        Toolkit toolkit = getToolkit();
+        Dimension size = toolkit.getScreenSize();
+        frame.setLocation(size.width / 3 - getWidth() / 3, size.height / 3
+                - getHeight() / 3);
+        frame.setResizable(true);
+        frame.setLayout(null);
+
+        JPanel pan1 = new JPanel();
+        pan1.setBorder(BorderFactory.createTitledBorder("Tamaño:"));
+        pan1.setBounds(0, 0, 250, 80);
+
+        JPanel pan2 = new JPanel();
+        pan2.setBorder(BorderFactory.createTitledBorder("Propiedad"));
+        pan2.setBounds(0, 80, 250, 80);
+
+        JLabel r1Label = new JLabel("width = ");
+        final JTextField r1Field = new JTextField("0");
+        r1Field.setColumns(3);
+
+        JLabel r2Label = new JLabel("height = ");
+        final JTextField r2Field = new JTextField("0");
+        r2Field.setColumns(3);
+
+        JLabel newR1Label = new JLabel("epsilon = ");
+        final JTextField y1Field = new JTextField("0");
+        y1Field.setColumns(3);
+
+        JButton okButton = new JButton("OK");
+        okButton.setSize(250, 40);
+        okButton.setBounds(0, 160, 250, 40);
+        okButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                int x1;
+                int y1;
+                double x2;
+
+                try {
+                    x1 = Integer.valueOf(r1Field.getText());
+                    y1 = Integer.valueOf(r2Field.getText());
+                    x2 = Double.valueOf(y1Field.getText());
+
+                } catch (NumberFormatException ex) {
+                    System.out.println("Los datos ingresados son invalidos");
+                    return;
+                }
+                img1 = EasyImage.newRayleigh(x1, y1, x2);
+                displayImage(img1.getBufferedImage());
+                frame.dispose();
+
+            }
+        });
+
+        pan1.add(r1Label);
+        pan1.add(r1Field);
+        pan1.add(r2Label);
+        pan1.add(r2Field);
+
+        pan2.add(newR1Label);
+        pan2.add(y1Field);
+
+        frame.add(pan1);
+        frame.add(pan2);
+        frame.add(okButton);
+
+
+
+    }//GEN-LAST:event_RayleighActionPerformed
+
+    private void GaussActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_GaussActionPerformed
+        final JFrame frame = new JFrame();
+        frame.setVisible(true);
+        frame.setTitle("Obtener imagen interna");
+        frame.setBounds(1, 1, 250, 230);
+        Toolkit toolkit = getToolkit();
+        Dimension size = toolkit.getScreenSize();
+        frame.setLocation(size.width / 3 - getWidth() / 3, size.height / 3
+                - getHeight() / 3);
+        frame.setResizable(true);
+        frame.setLayout(null);
+
+        JPanel pan1 = new JPanel();
+        pan1.setBorder(BorderFactory.createTitledBorder("Tamaño"));
+        pan1.setBounds(0, 0, 250, 80);
+
+        JPanel pan2 = new JPanel();
+        pan2.setBorder(BorderFactory.createTitledBorder("Propiedades:"));
+        pan2.setBounds(0, 80, 250, 80);
+
+        JLabel r1Label = new JLabel("width = ");
+        final JTextField r1Field = new JTextField("0");
+        r1Field.setColumns(3);
+
+        JLabel r2Label = new JLabel("height = ");
+        final JTextField r2Field = new JTextField("0");
+        r2Field.setColumns(3);
+
+        JLabel newR1Label = new JLabel("media = ");
+        final JTextField y1Field = new JTextField("0");
+        y1Field.setColumns(3);
+
+        JLabel newR2Label = new JLabel("sigma = ");
+        final JTextField y2Field = new JTextField("0");
+        y2Field.setColumns(3);
+
+        JButton okButton = new JButton("OK");
+        okButton.setSize(250, 40);
+        okButton.setBounds(0, 160, 250, 40);
+        okButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                int x1;
+                int y1;
+                double x2;
+                double y2;
+
+                try {
+                    x1 = Integer.valueOf(r1Field.getText());
+                    y1 = Integer.valueOf(r2Field.getText());
+                    x2 = Double.valueOf(y1Field.getText());
+                    y2 = Double.valueOf(y2Field.getText());
+
+                } catch (NumberFormatException ex) {
+                    System.out.println("Los datos ingresados son invalidos");
+                    return;
+                }
+                img1 = EasyImage.newGauss(x1, y1, x2, y2);
+                displayImage(img1.getBufferedImage());
+                frame.dispose();
+
+            }
+        });
+
+        pan1.add(r1Label);
+        pan1.add(r1Field);
+        pan1.add(r2Label);
+        pan1.add(r2Field);
+
+        pan2.add(newR1Label);
+        pan2.add(y1Field);
+        pan2.add(newR2Label);
+        pan2.add(y2Field);
+
+        frame.add(pan1);
+        frame.add(pan2);
+        frame.add(okButton);
+
+    }//GEN-LAST:event_GaussActionPerformed
+
+    private void ExponentialActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ExponentialActionPerformed
+        final JFrame frame = new JFrame();
+        frame.setVisible(true);
+        frame.setTitle("Obtener imagen interna");
+        frame.setBounds(1, 1, 250, 230);
+        Toolkit toolkit = getToolkit();
+        Dimension size = toolkit.getScreenSize();
+        frame.setLocation(size.width / 3 - getWidth() / 3, size.height / 3
+                - getHeight() / 3);
+        frame.setResizable(true);
+        frame.setLayout(null);
+
+        JPanel pan1 = new JPanel();
+        pan1.setBorder(BorderFactory.createTitledBorder("Tamaño:"));
+        pan1.setBounds(0, 0, 250, 80);
+
+        JPanel pan2 = new JPanel();
+        pan2.setBorder(BorderFactory.createTitledBorder("Propiedad"));
+        pan2.setBounds(0, 80, 250, 80);
+
+        JLabel r1Label = new JLabel("width = ");
+        final JTextField r1Field = new JTextField("0");
+        r1Field.setColumns(3);
+
+        JLabel r2Label = new JLabel("height = ");
+        final JTextField r2Field = new JTextField("0");
+        r2Field.setColumns(3);
+
+        JLabel newR1Label = new JLabel("lambda = ");
+        final JTextField y1Field = new JTextField("0");
+        y1Field.setColumns(3);
+
+        JButton okButton = new JButton("OK");
+        okButton.setSize(250, 40);
+        okButton.setBounds(0, 160, 250, 40);
+        okButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                int x1;
+                int y1;
+                double x2;
+
+                try {
+                    x1 = Integer.valueOf(r1Field.getText());
+                    y1 = Integer.valueOf(r2Field.getText());
+                    x2 = Double.valueOf(y1Field.getText());
+
+                } catch (NumberFormatException ex) {
+                    System.out.println("Los datos ingresados son invalidos");
+                    return;
+                }
+                img1 = EasyImage.newExponential(x1, y1, x2);
+                displayImage(img1.getBufferedImage());
+                frame.dispose();
+
+            }
+        });
+
+        pan1.add(r1Label);
+        pan1.add(r1Field);
+        pan1.add(r2Label);
+        pan1.add(r2Field);
+
+        pan2.add(newR1Label);
+        pan2.add(y1Field);
+
+        frame.add(pan1);
+        frame.add(pan2);
+        frame.add(okButton);
+
+
+
+
+    }//GEN-LAST:event_ExponentialActionPerformed
+
+    private void AddGaussActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AddGaussActionPerformed
+        final JFrame frame = new JFrame();
+        frame.setVisible(true);
+        frame.setTitle("Agregar Ruido gausseano:");
+        frame.setBounds(1, 1, 250, 150);
+        Toolkit toolkit = getToolkit();
+        Dimension size = toolkit.getScreenSize();
+        frame.setLocation(size.width / 3 - getWidth() / 3, size.height / 3
+                - getHeight() / 3);
+        frame.setResizable(true);
+        frame.setLayout(null);
+
+        JPanel pan1 = new JPanel();
+        pan1.setBorder(BorderFactory.createTitledBorder("Propiedades:"));
+        pan1.setBounds(0, 0, 250, 80);
+
+        JLabel r1Label = new JLabel("mu = ");
+        final JTextField r1Field = new JTextField("0");
+        r1Field.setColumns(3);
+
+        JLabel r2Label = new JLabel("sigma = ");
+        final JTextField r2Field = new JTextField("0");
+        r2Field.setColumns(3);
+
+        JButton okButton = new JButton("OK");
+        okButton.setSize(250, 40);
+        okButton.setBounds(0, 80, 250, 40);
+        okButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                double x1;
+                double y1;
+
+                try {
+                    x1 = Double.valueOf(r1Field.getText());
+                    y1 = Double.valueOf(r2Field.getText());
+
+                } catch (NumberFormatException ex) {
+                    System.out.println("Los datos ingresados son invalidos");
+                    return;
+                }
+                EasyImage gaussNoise = EasyImage.newGauss(img1.getWidth(), img1.getHeight(), x1, y1);
+                img1.addNoise(gaussNoise);
+                displayImage(img1.getBufferedImage());
+                frame.dispose();
+
+            }
+        });
+
+        pan1.add(r1Label);
+        pan1.add(r1Field);
+        pan1.add(r2Label);
+        pan1.add(r2Field);
+
+        frame.add(pan1);
+        frame.add(okButton);
+
+
+    }//GEN-LAST:event_AddGaussActionPerformed
+
+    private void AddExponentialActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AddExponentialActionPerformed
+        double lambda = Double.valueOf(JOptionPane.showInputDialog("lambda: "));
+        EasyImage expnoise = EasyImage.newExponential(img1.getWidth(), img1.getHeight(), lambda);
+        img1.multiplyNoise(expnoise);
+        displayImage(img1.getBufferedImage());
+    }//GEN-LAST:event_AddExponentialActionPerformed
+
+    private void AddRayleighActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AddRayleighActionPerformed
+        double epsilon = Double.valueOf(JOptionPane.showInputDialog("epsilon: "));
+        EasyImage raynoise = EasyImage.newRayleigh(img1.getWidth(), img1.getHeight(), epsilon);
+        img1.multiplyNoise(raynoise);
+        displayImage(img1.getBufferedImage());
+    }//GEN-LAST:event_AddRayleighActionPerformed
+
+    private void SaltNPepperActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SaltNPepperActionPerformed
+        final JFrame frame = new JFrame();
+        frame.setVisible(true);
+        frame.setTitle("Agregar Salt and Pepper:");
+        frame.setBounds(1, 1, 250, 150);
+        Toolkit toolkit = getToolkit();
+        Dimension size = toolkit.getScreenSize();
+        frame.setLocation(size.width / 3 - getWidth() / 3, size.height / 3
+                - getHeight() / 3);
+        frame.setResizable(true);
+        frame.setLayout(null);
+
+        JPanel pan1 = new JPanel();
+        pan1.setBorder(BorderFactory.createTitledBorder("Propiedades:"));
+        pan1.setBounds(0, 0, 250, 80);
+
+        JLabel r1Label = new JLabel("densidad = ");
+        final JTextField r1Field = new JTextField("0");
+        r1Field.setColumns(3);
+
+        JLabel r2Label = new JLabel("pSalt = ");
+        final JTextField r2Field = new JTextField("0");
+        r2Field.setColumns(3);
+
+        JButton okButton = new JButton("OK");
+        okButton.setSize(250, 40);
+        okButton.setBounds(0, 80, 250, 40);
+        okButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                double x1;
+                double y1;
+
+                try {
+                    x1 = Double.valueOf(r1Field.getText());
+                    y1 = Double.valueOf(r2Field.getText());
+
+                } catch (NumberFormatException ex) {
+                    System.out.println("Los datos ingresados son invalidos");
+                    return;
+                }
+                img1.addSaltNPepperColor(x1, y1);
+                displayImage(img1.getBufferedImage());
+                frame.dispose();
+
+            }
+        });
+
+        pan1.add(r1Label);
+        pan1.add(r1Field);
+        pan1.add(r2Label);
+        pan1.add(r2Field);
+
+        frame.add(pan1);
+        frame.add(okButton);
+
+    }//GEN-LAST:event_SaltNPepperActionPerformed
+
+    private void SaltNPepperBWActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SaltNPepperBWActionPerformed
+            final JFrame frame = new JFrame();
+        frame.setVisible(true);
+        frame.setTitle("Agregar Salt and Pepper:");
+        frame.setBounds(1, 1, 250, 150);
+        Toolkit toolkit = getToolkit();
+        Dimension size = toolkit.getScreenSize();
+        frame.setLocation(size.width / 3 - getWidth() / 3, size.height / 3
+                - getHeight() / 3);
+        frame.setResizable(true);
+        frame.setLayout(null);
+
+        JPanel pan1 = new JPanel();
+        pan1.setBorder(BorderFactory.createTitledBorder("Propiedades:"));
+        pan1.setBounds(0, 0, 250, 80);
+
+        JLabel r1Label = new JLabel("densidad = ");
+        final JTextField r1Field = new JTextField("0");
+        r1Field.setColumns(3);
+
+        JLabel r2Label = new JLabel("pSalt = ");
+        final JTextField r2Field = new JTextField("0");
+        r2Field.setColumns(3);
+
+        JButton okButton = new JButton("OK");
+        okButton.setSize(250, 40);
+        okButton.setBounds(0, 80, 250, 40);
+        okButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                double x1;
+                double y1;
+
+                try {
+                    x1 = Double.valueOf(r1Field.getText());
+                    y1 = Double.valueOf(r2Field.getText());
+
+                } catch (NumberFormatException ex) {
+                    System.out.println("Los datos ingresados son invalidos");
+                    return;
+                }
+                img1.addSaltNPepper(x1, y1);
+                displayImage(img1.getBufferedImage());
+                frame.dispose();
+
+            }
+        });
+
+        pan1.add(r1Label);
+        pan1.add(r1Field);
+        pan1.add(r2Label);
+        pan1.add(r2Field);
+
+        frame.add(pan1);
+        frame.add(okButton);
+
+    }//GEN-LAST:event_SaltNPepperBWActionPerformed
+
+    private void MedianFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MedianFilterActionPerformed
+                    final JFrame frame = new JFrame();
+        frame.setVisible(true);
+        frame.setTitle("Aplicar filtro:");
+        frame.setBounds(1, 1, 250, 150);
+        Toolkit toolkit = getToolkit();
+        Dimension size = toolkit.getScreenSize();
+        frame.setLocation(size.width / 3 - getWidth() / 3, size.height / 3
+                - getHeight() / 3);
+        frame.setResizable(true);
+        frame.setLayout(null);
+
+        JPanel pan1 = new JPanel();
+        pan1.setBorder(BorderFactory.createTitledBorder("Propiedades:"));
+        pan1.setBounds(0, 0, 250, 80);
+
+        JLabel r1Label = new JLabel("width = ");
+        final JTextField r1Field = new JTextField("0");
+        r1Field.setColumns(3);
+
+        JLabel r2Label = new JLabel("height = ");
+        final JTextField r2Field = new JTextField("0");
+        r2Field.setColumns(3);
+
+        JButton okButton = new JButton("OK");
+        okButton.setSize(250, 40);
+        okButton.setBounds(0, 80, 250, 40);
+        okButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                int x1;
+                int y1;
+
+                try {
+                    x1 = Integer.valueOf(r1Field.getText());
+                    y1 = Integer.valueOf(r2Field.getText());
+
+                } catch (NumberFormatException ex) {
+                    System.out.println("Los datos ingresados son invalidos");
+                    return;
+                }
+                img1.applyMedianMask(x1, y1);
+                displayImage(img1.getBufferedImage());
+                frame.dispose();
+
+            }
+        });
+
+        pan1.add(r1Label);
+        pan1.add(r1Field);
+        pan1.add(r2Label);
+        pan1.add(r2Field);
+
+        frame.add(pan1);
+        frame.add(okButton);
+
+    }//GEN-LAST:event_MedianFilterActionPerformed
+
+    private void MeanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MeanActionPerformed
+        final JFrame frame = new JFrame();
+        frame.setVisible(true);
+        frame.setTitle("Aplicar filtro:");
+        frame.setBounds(1, 1, 250, 150);
+        Toolkit toolkit = getToolkit();
+        Dimension size = toolkit.getScreenSize();
+        frame.setLocation(size.width / 3 - getWidth() / 3, size.height / 3
+                - getHeight() / 3);
+        frame.setResizable(true);
+        frame.setLayout(null);
+
+        JPanel pan1 = new JPanel();
+        pan1.setBorder(BorderFactory.createTitledBorder("Propiedades:"));
+        pan1.setBounds(0, 0, 250, 80);
+
+        JLabel r1Label = new JLabel("width = ");
+        final JTextField r1Field = new JTextField("0");
+        r1Field.setColumns(3);
+
+        JLabel r2Label = new JLabel("height = ");
+        final JTextField r2Field = new JTextField("0");
+        r2Field.setColumns(3);
+
+        JButton okButton = new JButton("OK");
+        okButton.setSize(250, 40);
+        okButton.setBounds(0, 80, 250, 40);
+        okButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                int x1;
+                int y1;
+
+                try {
+                    x1 = Integer.valueOf(r1Field.getText());
+                    y1 = Integer.valueOf(r2Field.getText());
+
+                } catch (NumberFormatException ex) {
+                    System.out.println("Los datos ingresados son invalidos");
+                    return;
+                }
+                img1.applyMask(Mask.newMeanFilter(x1, y1));
+                displayImage(img1.getBufferedImage());
+                frame.dispose();
+
+            }
+        });
+
+        pan1.add(r1Label);
+        pan1.add(r1Field);
+        pan1.add(r2Label);
+        pan1.add(r2Field);
+
+        frame.add(pan1);
+        frame.add(okButton);
+    }//GEN-LAST:event_MeanActionPerformed
+
+    private void BorderAmpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BorderAmpActionPerformed
+              final JFrame frame = new JFrame();
+        frame.setVisible(true);
+        frame.setTitle("Aplicar filtro:");
+        frame.setBounds(1, 1, 250, 150);
+        Toolkit toolkit = getToolkit();
+        Dimension size = toolkit.getScreenSize();
+        frame.setLocation(size.width / 3 - getWidth() / 3, size.height / 3
+                - getHeight() / 3);
+        frame.setResizable(true);
+        frame.setLayout(null);
+
+        JPanel pan1 = new JPanel();
+        pan1.setBorder(BorderFactory.createTitledBorder("Propiedades:"));
+        pan1.setBounds(0, 0, 250, 80);
+
+        JLabel r1Label = new JLabel("width = ");
+        final JTextField r1Field = new JTextField("0");
+        r1Field.setColumns(3);
+
+        JLabel r2Label = new JLabel("height = ");
+        final JTextField r2Field = new JTextField("0");
+        r2Field.setColumns(3);
+
+        JButton okButton = new JButton("OK");
+        okButton.setSize(250, 40);
+        okButton.setBounds(0, 80, 250, 40);
+        okButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                int x1;
+                int y1;
+
+                try {
+                    x1 = Integer.valueOf(r1Field.getText());
+                    y1 = Integer.valueOf(r2Field.getText());
+
+                } catch (NumberFormatException ex) {
+                    System.out.println("Los datos ingresados son invalidos");
+                    return;
+                }
+                img1.applyMask(Mask.newHighAmpFilter(x1, y1));
+                displayImage(img1.getBufferedImage());
+                frame.dispose();
+
+            }
+        });
+
+        pan1.add(r1Label);
+        pan1.add(r1Field);
+        pan1.add(r2Label);
+        pan1.add(r2Field);
+
+        frame.add(pan1);
+        frame.add(okButton);
+    }//GEN-LAST:event_BorderAmpActionPerformed
+
+    private void SwapImgsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SwapImgsActionPerformed
+        EasyImage aux = img1;
+        img1 = img2;
+        img2=aux;
+    }//GEN-LAST:event_SwapImgsActionPerformed
 
     public void displayImage(BufferedImage img) {
         JFrame frame = new JFrame();
@@ -434,23 +1710,53 @@ public class MainJFrame extends javax.swing.JFrame {
         });
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JMenuItem AddExponential;
+    private javax.swing.JMenuItem AddGauss;
+    private javax.swing.JMenuItem AddRayleigh;
     private javax.swing.JMenuItem BWDegradee;
+    private javax.swing.JMenuItem BWDegradee2;
+    private javax.swing.JMenuItem BorderAmp;
     private javax.swing.JMenuItem Circle;
+    private javax.swing.JMenuItem Circle2;
     private javax.swing.JMenuItem ColorDegradee;
+    private javax.swing.JMenuItem ColorDegradee2;
+    private javax.swing.JMenuItem Contrast1;
+    private javax.swing.JMenuItem Contrast2;
     private javax.swing.JMenuItem DRC1;
+    private javax.swing.JMenuItem DRC2;
+    private javax.swing.JMenuItem Equalize1;
+    private javax.swing.JMenuItem Equalize2;
+    private javax.swing.JMenuItem Exponential;
+    private javax.swing.JMenuItem Gauss;
     private javax.swing.JMenuItem GenHistorgram1;
+    private javax.swing.JMenuItem GenHistorgram2;
+    private javax.swing.JMenu JMenu8;
     private javax.swing.JMenuItem LoadImg1;
     private javax.swing.JMenuItem LoadImg2;
+    private javax.swing.JMenuItem Mean;
+    private javax.swing.JMenuItem MedianFilter;
     private javax.swing.JMenuItem Multiply1;
-    private javax.swing.JMenuItem Negative2;
+    private javax.swing.JMenuItem Multiply2;
     private javax.swing.JMenuItem NegativeImg1;
-    private javax.swing.JMenuItem Normalize;
+    private javax.swing.JMenuItem NegativeImg2;
+    private javax.swing.JMenuItem Normalize1;
+    private javax.swing.JMenuItem Normalize2;
+    private javax.swing.JMenuItem Rayleigh;
     private javax.swing.JMenuItem Resta12;
     private javax.swing.JMenuItem Resta21;
+    private javax.swing.JMenuItem SaltNPepper;
+    private javax.swing.JMenuItem SaltNPepperBW;
     private javax.swing.JMenuItem Save1;
-    private javax.swing.JMenuItem Show;
+    private javax.swing.JMenuItem Save2;
+    private javax.swing.JMenuItem Show1;
+    private javax.swing.JMenuItem Show2;
     private javax.swing.JMenuItem Square;
+    private javax.swing.JMenuItem Square2;
     private javax.swing.JMenuItem Suma;
+    private javax.swing.JMenuItem SwapImgs;
+    private javax.swing.JMenuItem Umbral1;
+    private javax.swing.JMenuItem Umbral2;
+    private javax.swing.JMenuItem getSubImage;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenu jMenu3;
@@ -458,7 +1764,14 @@ public class MainJFrame extends javax.swing.JFrame {
     private javax.swing.JMenu jMenu5;
     private javax.swing.JMenu jMenu6;
     private javax.swing.JMenu jMenu7;
+    private javax.swing.JMenu jMenu8;
+    private javax.swing.JMenu jMenu9;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
+    private javax.swing.JMenuItem jMenuItem2;
+    private javax.swing.JMenuItem jMenuItem3;
+    private javax.swing.JMenuItem jMenuItem4;
+    private javax.swing.JMenuItem toGrey1;
+    private javax.swing.JMenuItem toGrey2;
     // End of variables declaration//GEN-END:variables
 }
