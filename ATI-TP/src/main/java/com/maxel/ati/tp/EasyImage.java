@@ -86,6 +86,7 @@ public class EasyImage {
         EasyImage image = new EasyImage(width, height);
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
+               // System.out.println((int)NoiseGenerator.exponential(lambda));
                 int aux = ((int) NoiseGenerator.exponential(lambda) & 0x000000FF) << 16;
                 aux += ((int) NoiseGenerator.exponential(lambda) & 0x000000FF) << 8;
                 aux += (int) NoiseGenerator.exponential(lambda) & 0x000000FF;
@@ -327,8 +328,9 @@ public class EasyImage {
             }
         }
     }
-    public boolean isValid(int x, int y){
-        return (x>=0 && y>=0 && x<width && y<width);
+
+    public boolean isValid(int x, int y) {
+        return (x >= 0 && y >= 0 && x < width && y < width);
     }
 
     public void multiply(int factor) {
@@ -561,48 +563,52 @@ public class EasyImage {
     public int getHeight() {
         return height;
     }
-    
-    public int applyMaskToPixelInChannel(int x1, int y1, Mask m, int[] channel){
-        double aux=0;
-        for(int x=-m.width/2;x<m.width/2+m.width%2;x++){
-            for(int y=-m.height/2;y<m.height/2+m.height%2;y++){
-                if(isValid(x+x1, y+y1)){
-                    aux+=m.getValue(x, y)*channel[(x1+x)+(y1+y)*width];
-                }else if(isValid(x1+x,y1-y)){
-                    aux+=m.getValue(x, y)*channel[(x1+x)+(y1-y)*width];
-                }else if(isValid(x1-x,y1+y)){
-                    aux+=m.getValue(x, y)*channel[(x1-x)+(y1+y)*width];
-                }else if(isValid(x1-x,y1-y)){
-                    aux+=m.getValue(x, y)*channel[(x1-x)+(y1-y)*width];
+
+    public int applyMaskToPixelInChannel(int x1, int y1, Mask m, int[] channel) {
+        double aux = 0;
+        for (int x = -m.width / 2; x < m.width / 2 + m.width % 2; x++) {
+            for (int y = -m.height / 2; y < m.height / 2 + m.height % 2; y++) {
+                if (isValid(x + x1, y + y1)) {
+                    aux += m.getValue(x, y) * channel[(x1 + x) + (y1 + y) * width];
+                } else if (isValid(x1 + x, y1 - y)) {
+                    aux += m.getValue(x, y) * channel[(x1 + x) + (y1 - y) * width];
+                } else if (isValid(x1 - x, y1 + y)) {
+                    aux += m.getValue(x, y) * channel[(x1 - x) + (y1 + y) * width];
+                } else if (isValid(x1 - x, y1 - y)) {
+                    aux += m.getValue(x, y) * channel[(x1 - x) + (y1 - y) * width];
                 }
             }
         }
         return (int) aux;
     }
-    public void applyMask(Mask m){
+
+    public void applyMask(Mask m) {
         int i;
-        for(int x=0;x<width;x++){
-            for(int y=0;y<height;y++){
-                i=y*width+x;
+        for (int x = 0; x < width; x++) {
+            for (int y = 0; y < height; y++) {
+                i = y * width + x;
                 channelR[i] = applyMaskToPixelInChannel(x, y, m, channelR);
                 channelG[i] = applyMaskToPixelInChannel(x, y, m, channelG);
                 channelB[i] = applyMaskToPixelInChannel(x, y, m, channelB);
             }
         }
+        if (!isAppropiate()) {
+            normalize();
+        }
         updateFullImg();
     }
-    
-    public void applyMedianMask(int height, int width){
+
+    public void applyMedianMask(int height, int width) {
         int i;
-        int[] newChannelR = new int[this.height*this.width];
-        int[] newChannelG = new int[this.height*this.width];
-        int[] newChannelB = new int[this.height*this.width];
-        for(int x=0;x<getWidth();x++){
-            for(int y=0;y<getHeight();y++){
-                i=y*getWidth()+x;
-                newChannelR[i] = applyMedianMaskToChannelPixel(x, y, height,width, channelR);
-                newChannelG[i] = applyMedianMaskToChannelPixel(x, y, height,width, channelG);
-                newChannelB[i] = applyMedianMaskToChannelPixel(x, y, height,width, channelB);
+        int[] newChannelR = new int[this.height * this.width];
+        int[] newChannelG = new int[this.height * this.width];
+        int[] newChannelB = new int[this.height * this.width];
+        for (int x = 0; x < getWidth(); x++) {
+            for (int y = 0; y < getHeight(); y++) {
+                i = y * getWidth() + x;
+                newChannelR[i] = applyMedianMaskToChannelPixel(x, y, height, width, channelR);
+                newChannelG[i] = applyMedianMaskToChannelPixel(x, y, height, width, channelG);
+                newChannelB[i] = applyMedianMaskToChannelPixel(x, y, height, width, channelB);
             }
         }
         channelR = newChannelR;
@@ -610,25 +616,24 @@ public class EasyImage {
         channelB = newChannelB;
         updateFullImg();
     }
-    
-    public int applyMedianMaskToChannelPixel(int x1, int y1, int height, int width, int[] channel){
+
+    public int applyMedianMaskToChannelPixel(int x1, int y1, int height, int width, int[] channel) {
         ArrayList<Integer> list = new ArrayList<Integer>();
-        
-        for(int x=-width/2;x<width/2+width%2;x++){
-            for(int y=-height/2;y<height/2+height%2;y++){
-                if(isValid(x+x1, y+y1)){
-                    list.add(channel[(x1+x)+(y1+y)*getWidth()]);
-                }else if(isValid(x1-x,y1+y)){
-                    list.add(channel[(x1-x)+(y1+y)*getWidth()]);
-                }else if(isValid(x1+x,y1-y)){
-                    list.add(channel[(x1+x)+(y1-y)*getWidth()]);
-                }else if(isValid(x1-x,y1-y)){
-                    list.add(channel[(x1-x)+(y1-y)*getWidth()]);
+
+        for (int x = -width / 2; x < width / 2 + width % 2; x++) {
+            for (int y = -height / 2; y < height / 2 + height % 2; y++) {
+                if (isValid(x + x1, y + y1)) {
+                    list.add(channel[(x1 + x) + (y1 + y) * getWidth()]);
+                } else if (isValid(x1 - x, y1 + y)) {
+                    list.add(channel[(x1 - x) + (y1 + y) * getWidth()]);
+                } else if (isValid(x1 + x, y1 - y)) {
+                    list.add(channel[(x1 + x) + (y1 - y) * getWidth()]);
+                } else if (isValid(x1 - x, y1 - y)) {
+                    list.add(channel[(x1 - x) + (y1 - y) * getWidth()]);
                 }
             }
         }
         Collections.sort(list);
-        return list.get(height*width/2 +height*width%2);
+        return list.get(height * width / 2 + height * width % 2);
     }
-    
 }

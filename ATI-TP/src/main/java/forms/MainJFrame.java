@@ -1671,8 +1671,9 @@ public class MainJFrame extends javax.swing.JFrame {
         JFrame frame = new JFrame();
         JLabel lblimage = new JLabel(new ImageIcon(img));
         frame.getContentPane().add(lblimage, BorderLayout.CENTER);
-        frame.setSize(img.getWidth(), img.getHeight());
+        frame.setSize(img.getWidth()+50, img.getHeight()+50);
         frame.setVisible(true);
+        frame.setResizable(true);
     }
 
     /**
