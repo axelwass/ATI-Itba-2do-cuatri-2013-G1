@@ -7,8 +7,6 @@ package com.maxel.ati.tp;
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.awt.image.ColorModel;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Random;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
@@ -23,9 +21,9 @@ import org.jfree.data.statistics.HistogramType;
 public class EasyImage {
 
     BufferedImage img;
-    int[] channelR;
-    int[] channelG;
-    int[] channelB;
+    Channel R;
+    Channel G;
+    Channel B;
 //    int[] channelA;
     int[] fullImg;
     int width;
@@ -54,45 +52,48 @@ public class EasyImage {
 
     public static EasyImage newGauss(int width, int height, double mean, double std) {
         EasyImage image = new EasyImage(width, height);
-        for (int y = 0; y < height; y++) {
-            for (int x = 0; x < width; x++) {
-                int aux = ((int) NoiseGenerator.gaussian(mean, std) & 0x000000FF) << 16;
-                aux += ((int) NoiseGenerator.gaussian(mean, std) & 0x000000FF) << 8;
-                aux += (int) NoiseGenerator.gaussian(mean, std) & 0x000000FF;
-                image.setRGB(x, y, aux);
+        Channel noisyChannel = new Channel(image.getWidth(), image.getHeight());
+        for (int x = 0; x < noisyChannel.getWidth(); x++) {
+            for (int y = 0; y < noisyChannel.getHeight(); y++) {
+                double noiseLevel = NoiseGenerator.gaussian(mean, std);
+                noisyChannel.setValue(x, y, noiseLevel);
             }
         }
+        image.R = noisyChannel;
+        image.G = noisyChannel;
+        image.B = noisyChannel;
         image.updateFullImg();
         return image;
     }
 
     public static EasyImage newRayleigh(int width, int height, double eps) {
         EasyImage image = new EasyImage(width, height);
-
-
-        for (int y = 0; y < height; y++) {
-            for (int x = 0; x < width; x++) {
-                int aux = ((int) NoiseGenerator.rayleigh(eps) & 0x000000FF) << 16;
-                aux += ((int) NoiseGenerator.rayleigh(eps) & 0x000000FF) << 8;
-                aux += (int) NoiseGenerator.rayleigh(eps) & 0x000000FF;
-                image.setRGB(x, y, aux);
+        Channel noisyChannel = new Channel(width, height);
+        for (int x = 0; x < noisyChannel.getWidth(); x++) {
+            for (int y = 0; y < noisyChannel.getHeight(); y++) {
+                double noiseLevel = NoiseGenerator.rayleigh(eps);
+                noisyChannel.setValue(x, y, noiseLevel);
             }
         }
+        image.R = noisyChannel;
+        image.G = noisyChannel;
+        image.B = noisyChannel;
         image.updateFullImg();
         return image;
     }
 
     public static EasyImage newExponential(int width, int height, double lambda) {
         EasyImage image = new EasyImage(width, height);
-        for (int y = 0; y < height; y++) {
-            for (int x = 0; x < width; x++) {
-               // System.out.println((int)NoiseGenerator.exponential(lambda));
-                int aux = ((int) NoiseGenerator.exponential(lambda) & 0x000000FF) << 16;
-                aux += ((int) NoiseGenerator.exponential(lambda) & 0x000000FF) << 8;
-                aux += (int) NoiseGenerator.exponential(lambda) & 0x000000FF;
-                image.setRGB(x, y, aux);
-            }
-        }
+        Channel noisyChannel = new Channel(image.getWidth(), image.getHeight());
+		for (int x = 0; x < noisyChannel.getWidth(); x++) {
+			for (int y = 0; y < noisyChannel.getHeight(); y++) {
+				double noiseLevel = NoiseGenerator.exponential(lambda);
+				noisyChannel.setValue(x, y, noiseLevel);
+			}
+		}
+        image.R = noisyChannel;
+        image.G = noisyChannel;
+        image.B = noisyChannel;
         image.updateFullImg();
         return image;
     }
@@ -139,15 +140,6 @@ public class EasyImage {
 
     private static EasyImage newDegradee(int width, int height, int color1, int color2, boolean isColor) {
         EasyImage degrade = new EasyImage(width, height);
-
-//		if (isColor) {
-//			degrade = new ColorImage(height, width, Image.ImageFormat.BMP,
-//					Image.ImageType.RGB);
-//		} else {
-//			degrade = new ColorImage(height, width, Image.ImageFormat.BMP,
-//					Image.ImageType.GRAYSCALE);
-//		}
-
         Color c1 = new Color(color1);
         Color cAux = new Color(color1);
         Color c2 = new Color(color2);
@@ -182,10 +174,9 @@ public class EasyImage {
         this.width = img.getWidth();
         this.height = img.getHeight();
         fullImg = img.getRGB(0, 0, img.getWidth(), img.getHeight(), null, 0, img.getWidth());
-        channelR = new int[fullImg.length];
-        channelG = new int[fullImg.length];
-        channelB = new int[fullImg.length];
-//        channelA = new int[fullImg.length];
+        R = new Channel(width, height);
+        G = new Channel(width, height);
+        B = new Channel(width, height);
         updateChannels();
     }
 
@@ -193,11 +184,9 @@ public class EasyImage {
         this.width = width;
         this.height = height;
         fullImg = new int[width * height];
-        channelR = new int[fullImg.length];
-        channelG = new int[fullImg.length];
-        channelB = new int[fullImg.length];
-//        channelA = new int[fullImg.length];
-
+        R = new Channel(width, height);
+        G = new Channel(width, height);
+        B = new Channel(width, height);
     }
 
     public EasyImage getSubImage(int startX, int startY, int endX, int endY) {
@@ -227,18 +216,21 @@ public class EasyImage {
         for (int i = 0; i < fullImg.length; i++) {
             int rgb = fullImg[i];
 //            channelA[i] = (rgb >> 24) & 0x000000FF;
-            channelR[i] = (rgb >> 16) & 0x000000FF;
-            channelG[i] = (rgb >> 8) & 0x000000FF;
-            channelB[i] = (rgb) & 0x000000FF;
+            R.setValue(i, (rgb >> 16) & 0x000000FF);
+            G.setValue(i, (rgb >> 8) & 0x000000FF);
+            B.setValue(i, (rgb) & 0x000000FF);
+//            channelR[i] = (rgb >> 16) & 0x000000FF;
+//            channelG[i] = (rgb >> 8) & 0x000000FF;
+//            channelB[i] = (rgb) & 0x000000FF;
         }
     }
 
     private void updateFullImg() {
         for (int i = 0; i < fullImg.length; i++) {
 //            fullImg[i] = channelA[i] << 24;
-            fullImg[i] = (channelR[i] & 0x000000FF) << 16;
-            fullImg[i] += (channelG[i] & 0x000000FF) << 8;
-            fullImg[i] += channelB[i] & 0x000000FF;
+            fullImg[i] = ((int) R.getValue(i) & 0x000000FF) << 16;
+            fullImg[i] += ((int) G.getValue(i) & 0x000000FF) << 8;
+            fullImg[i] += (int) B.getValue(i) & 0x000000FF;
         }
     }
 
@@ -246,87 +238,20 @@ public class EasyImage {
         for (int i = 0; i < width * height; i++) {
             fullImg[i] = 0x00ffffff - fullImg[i];
         }
-        //                    for (int x = 0; x < width; x++) {
-//                        for (int y = 0; y < height; y++) {
-//                            int aux = img.getRGB(x, y);
-//                            aux = 0x0fff - aux;
-//                            img.setRGB(x, y, aux);
-//                        }
-//                    }
-    }
-
-    private void normalizeChannel(int[] channel) {
-        Integer max = channel[0];
-        Integer min = channel[0];
-//        for (int x : channelA) {
-//            max = x > max ? x : max;
-//            min = x < min ? x : min;
-//        }
-        for (int x : channelR) {
-            max = x > max ? x : max;
-            min = x < min ? x : min;
-        }
-        for (int x : channelG) {
-            max = x > max ? x : max;
-            min = x < min ? x : min;
-        }
-        for (int x : channelB) {
-            max = x > max ? x : max;
-            min = x < min ? x : min;
-        }
-        max = max - min;
-        for (int i = 0; i < channel.length; i++) {
-            channel[i] = ((channel[i] - min) * 255) / max;
-        }
     }
 
     public void dynamicRangeCompress() {
-        dynamicRangeCompression(channelR);
-        dynamicRangeCompression(channelG);
-        dynamicRangeCompression(channelB);
+        R.dynamicRangeCompression();
+        G.dynamicRangeCompression();
+        B.dynamicRangeCompression();
         updateFullImg();
-    }
-
-    private void contrastChannel(int r1, int r2, double y1, double y2, int[] channel) {
-        for (int i = 0; i < width * height; i++) {
-            double r = channel[i];
-            double m = 0;
-            double b = 0;
-            if (r < r1) {
-                m = y1 / r1;
-                b = 0;
-            } else if (r > r2) {
-                m = (255 - y2) / (255 - r2);
-                b = y2 - m * r2;
-            } else {
-                m = (y2 - y1) / (r2 - r1);
-                b = y1 - m * r1;
-            }
-            double f = m * r + b;
-            channel[i] = (int) f;
-        }
-
     }
 
     public void applyContrast(int p1, int p2, double y1, double y2) {
-        contrastChannel(p1, p2, y1, y2, channelR);
-        contrastChannel(p1, p2, y1, y2, channelG);
-        contrastChannel(p1, p2, y1, y2, channelB);
+        R.contrast(p1, p2, y1, y2);
+        G.contrast(p1, p2, y1, y2);
+        B.contrast(p1, p2, y1, y2);
         updateFullImg();
-    }
-
-    private void dynamicRangeCompression(int[] channel) {
-        int max = 0;
-        for (int x : channel) {
-            max = max > x ? max : x;
-        }
-        int L = 255;
-        double c = (L - 1) / Math.log(1 + max);
-        for (int x = 0; x < width; x++) {
-            for (int y = 0; y < height; y++) {
-                channel[x + y * width] = (int) (c * Math.log(1 + channel[x + y * width]));
-            }
-        }
     }
 
     public boolean isValid(int x, int y) {
@@ -334,27 +259,41 @@ public class EasyImage {
     }
 
     public void multiply(int factor) {
-        for (int i = 0; i < channelR.length; i++) {
-            channelR[i] *= factor;
-            channelG[i] *= factor;
-            channelB[i] *= factor;
-        }
+        R.multiply(factor);
+        G.multiply(factor);
+        B.multiply(factor);
         updateFullImg();
+    }
+
+    public double getMax() {
+        double maxR = R.getMax();
+        double maxG = G.getMax();
+        double maxB = B.getMax();
+        return maxR > maxG ? (maxR > maxB ? maxR : maxB) : (maxG > maxB ? maxG : maxB);
+    }
+
+    public double getMin() {
+        double minR = R.getMin();
+        double minG = G.getMin();
+        double minB = B.getMin();
+        return minR < minG ? (minR < minB ? minR : minB) : (minG < minB ? minG : minB);
     }
 
     public void normalize() {
 //        normalizeChannel(channelA);
-        normalizeChannel(channelR);
-        normalizeChannel(channelG);
-        normalizeChannel(channelB);
+        double min = getMin();
+        double max = getMax();
+        R.normalize(max, min);
+        G.normalize(max, min);
+        B.normalize(max, min);
         updateFullImg();
     }
 
     public void substract(EasyImage img2) {
         for (int i = 0; i < fullImg.length; i++) {
-            channelR[i] -= img2.channelR[i];
-            channelG[i] -= img2.channelG[i];
-            channelB[i] -= img2.channelB[i];
+            R.substract(i, img2.R.getValue(i));
+            G.substract(i, img2.G.getValue(i));
+            B.substract(i, img2.B.getValue(i));
         }
         updateFullImg();
         if (!isAppropiate()) {
@@ -364,9 +303,9 @@ public class EasyImage {
 
     public void add(EasyImage img2) {
         for (int i = 0; i < fullImg.length; i++) {
-            channelR[i] += img2.channelR[i];
-            channelG[i] += img2.channelG[i];
-            channelB[i] += img2.channelB[i];
+            R.add(i, img2.R.getValue(i));
+            G.add(i, img2.G.getValue(i));
+            B.add(i, img2.B.getValue(i));
         }
         updateFullImg();
         if (!isAppropiate()) {
@@ -378,36 +317,29 @@ public class EasyImage {
         int i = y * width + x;
         fullImg[i] = rgb;
 //        channelA[i] = (rgb >> 24) & 0x000000FF;
-        channelR[i] = (rgb >> 16) & 0x000000FF;
-        channelG[i] = (rgb >> 8) & 0x000000FF;
-        channelB[i] = (rgb) & 0x000000FF;
-
+        R.setValue(i, (rgb >> 16) & 0x000000FF);
+        G.setValue(i, (rgb >> 8) & 0x000000FF);
+        B.setValue(i, (rgb) & 0x000000FF);
     }
 
     public int getRGB(int x, int y) {
         int i = y * width + x;
         return fullImg[i];
-
     }
 
     public boolean isAppropiate() {
-        return isAppropiate(channelR) && isAppropiate(channelG) && isAppropiate(channelB);
-    }
-
-    private boolean isAppropiate(int[] channel) {
-        for (int i = 0; i < channel.length; i++) {
-            if (channel[i] < 0 || channel[i] > 255) {
-                return false;
-            }
-        }
-        return true;
+        return R.isAppropiate() && G.isAppropiate() && B.isAppropiate();
     }
 
     private double getGreyLevel(int x, int y) {
         int i = y * width + x;
-        double red = channelR[i];
-        double green = channelG[i];
-        double blue = channelB[i];
+        return getGreyLevel(i);
+    }
+
+    private double getGreyLevel(int i) {
+        double red = R.getValue(i);
+        double green = G.getValue(i);
+        double blue = B.getValue(i);
 
         return (red + green + blue) / 3.0;
     }
@@ -444,75 +376,33 @@ public class EasyImage {
     }
 
     public void umbral(int value) {
-        int black = 0;
-        int white = 255;
-        for (int i = 0; i < width * height; i++) {
-            channelR[i] = channelR[i] > value ? white : black;
-            channelG[i] = channelG[i] > value ? white : black;
-            channelB[i] = channelB[i] > value ? white : black;
-        }
+        R.umbral(value);
+        G.umbral(value);
+        B.umbral(value);
         updateFullImg();
     }
 
     public void toGrey() {
         for (int i = 0; i < width * height; i++) {
-            channelR[i] = (channelR[i] + channelG[i] + channelB[i]) / 3;
+            R.setValue(i, getGreyLevel(i));
         }
-        channelG = channelR;
-        channelB = channelR;
+        G.setValues(R.values);
+        B.setValues(R.values);
         updateFullImg();
     }
 
     public void equalize() {
-        equalizeChannel(channelR);
-        equalizeChannel(channelG);
-        equalizeChannel(channelB);
+        R.equalize();
+        G.equalize();
+        B.equalize();
         updateFullImg();
     }
 
-    private void equalizeChannel(int[] channel) {
-        int[] ocurrences = getOccurrences(channel);
-        double[] newChannel = new double[channel.length];
-        double s_min = 255;
-        double s_max = 0;
-
-        for (int i = 0; i < newChannel.length; i++) {
-            int grayLevel = channel[i];
-
-            double outGrayLevel = 0;
-            for (int k = 0; k < grayLevel; k++) {
-                outGrayLevel += ocurrences[k];
-            }
-
-            newChannel[i] = outGrayLevel / channel.length;
-            s_min = Math.min(s_min, newChannel[i]);
-            s_max = Math.max(s_max, newChannel[i]);
-
-        }
-        for (int i = 0; i < newChannel.length; i++) {
-            double aux = 255 * (newChannel[i] - s_min) / (s_max - s_min);
-            channel[i] = (int) Math.ceil(aux);
-        }
-    }
-
-    public int[] getOccurrences(int[] channel) {
-        int[] occu = new int[256];
-        for (int i = 0; i < channel.length; i++) {
-            int c = channel[i];
-            //check for ouverflow
-            c = c > 255 ? 255 : (c < 0 ? 0 : c);
-            occu[c]++;
-        }
-
-        return occu;
-    }
-
     public void multiplyNoise(EasyImage ei) {
-        Random aux = new Random(System.currentTimeMillis());
         for (int i = 0; i < width * height; i++) {
-            channelR[i] = (int) (((double) channelR[i]) * (1.0 + (aux.nextBoolean() ? 1 : -1) * ((double) ei.channelR[i]) / 255.0));
-            channelG[i] = (int) (((double) channelG[i]) * (1.0 + (aux.nextBoolean() ? 1 : -1) * ((double) ei.channelG[i]) / 255.0));
-            channelB[i] = (int) (((double) channelB[i]) * (1.0 + (aux.nextBoolean() ? 1 : -1) * ((double) ei.channelB[i]) / 255.0));
+            R.multiply(i, ei.R.getValue(i));
+            G.multiply(i, ei.G.getValue(i));
+            B.multiply(i, ei.B.getValue(i));
         }
         if (!isAppropiate()) {
             normalize();
@@ -521,11 +411,10 @@ public class EasyImage {
     }
 
     public void addNoise(EasyImage ei) {
-        Random aux = new Random(System.currentTimeMillis());
         for (int i = 0; i < width * height; i++) {
-            channelR[i] = (int) (((double) channelR[i]) + (aux.nextBoolean() ? 1 : 1) * ((double) ei.channelR[i]));
-            channelG[i] = (int) (((double) channelG[i]) + (aux.nextBoolean() ? 1 : 1) * ((double) ei.channelG[i]));
-            channelB[i] = (int) (((double) channelB[i]) + (aux.nextBoolean() ? 1 : 1) * ((double) ei.channelB[i]));
+            R.add(i, ei.R.getValue(i));
+            G.add(i, ei.G.getValue(i));
+            B.add(i, ei.B.getValue(i));
         }
         if (!isAppropiate()) {
             normalize();
@@ -536,9 +425,9 @@ public class EasyImage {
     public void addSaltNPepperColor(double p, double pSalt) {
         Random aux = new Random(System.currentTimeMillis());
         for (int i = 0; i < width * height; i++) {
-            channelR[i] = aux.nextDouble() < p ? (aux.nextDouble() < pSalt ? 255 : 0) : channelR[i];
-            channelG[i] = aux.nextDouble() < p ? (aux.nextDouble() < pSalt ? 255 : 0) : channelG[i];
-            channelB[i] = aux.nextDouble() < p ? (aux.nextDouble() < pSalt ? 255 : 0) : channelB[i];
+            R.setValue(i, aux.nextDouble() < p ? (aux.nextDouble() < pSalt ? 255 : 0) : R.getValue(i));
+            G.setValue(i, aux.nextDouble() < p ? (aux.nextDouble() < pSalt ? 255 : 0) : G.getValue(i));
+            B.setValue(i, aux.nextDouble() < p ? (aux.nextDouble() < pSalt ? 255 : 0) : B.getValue(i));
         }
         updateFullImg();
     }
@@ -548,9 +437,9 @@ public class EasyImage {
         for (int i = 0; i < width * height; i++) {
             int bw = (aux.nextDouble() < pSalt ? 255 : 0);
             if (aux.nextDouble() < p) {
-                channelR[i] = bw;
-                channelG[i] = bw;
-                channelB[i] = bw;
+                R.setValue(i, bw);
+                G.setValue(i, bw);
+                B.setValue(i, bw);
             }
         }
         updateFullImg();
@@ -564,34 +453,20 @@ public class EasyImage {
         return height;
     }
 
-    public int applyMaskToPixelInChannel(int x1, int y1, Mask m, int[] channel) {
-        double aux = 0;
-        for (int x = -m.width / 2; x < m.width / 2 + m.width % 2; x++) {
-            for (int y = -m.height / 2; y < m.height / 2 + m.height % 2; y++) {
-                if (isValid(x + x1, y + y1)) {
-                    aux += m.getValue(x, y) * channel[(x1 + x) + (y1 + y) * width];
-                } else if (isValid(x1 + x, y1 - y)) {
-                    aux += m.getValue(x, y) * channel[(x1 + x) + (y1 - y) * width];
-                } else if (isValid(x1 - x, y1 + y)) {
-                    aux += m.getValue(x, y) * channel[(x1 - x) + (y1 + y) * width];
-                } else if (isValid(x1 - x, y1 - y)) {
-                    aux += m.getValue(x, y) * channel[(x1 - x) + (y1 - y) * width];
-                }
-            }
-        }
-        return (int) aux;
-    }
-
     public void applyMask(Mask m) {
-        int i;
+        Channel auxR = new Channel(width, height);
+        Channel auxG = new Channel(width, height);
+        Channel auxB = new Channel(width, height);
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
-                i = y * width + x;
-                channelR[i] = applyMaskToPixelInChannel(x, y, m, channelR);
-                channelG[i] = applyMaskToPixelInChannel(x, y, m, channelG);
-                channelB[i] = applyMaskToPixelInChannel(x, y, m, channelB);
+                auxR.setValue(x, y, R.applyMask(x, y, m));
+                auxG.setValue(x, y, G.applyMask(x, y, m));
+                auxB.setValue(x, y, B.applyMask(x, y, m));
             }
         }
+        R.setValues(auxR.values);
+        G.setValues(auxG.values);
+        B.setValues(auxB.values);
         if (!isAppropiate()) {
             normalize();
         }
@@ -600,40 +475,20 @@ public class EasyImage {
 
     public void applyMedianMask(int height, int width) {
         int i;
-        int[] newChannelR = new int[this.height * this.width];
-        int[] newChannelG = new int[this.height * this.width];
-        int[] newChannelB = new int[this.height * this.width];
+        double[] newChannelR = new double[this.height * this.width];
+        double[] newChannelG = new double[this.height * this.width];
+        double[] newChannelB = new double[this.height * this.width];
         for (int x = 0; x < getWidth(); x++) {
             for (int y = 0; y < getHeight(); y++) {
                 i = y * getWidth() + x;
-                newChannelR[i] = applyMedianMaskToChannelPixel(x, y, height, width, channelR);
-                newChannelG[i] = applyMedianMaskToChannelPixel(x, y, height, width, channelG);
-                newChannelB[i] = applyMedianMaskToChannelPixel(x, y, height, width, channelB);
+                newChannelR[i] = R.applyMedianMask(x, y, height, width);
+                newChannelG[i] = G.applyMedianMask(x, y, height, width);
+                newChannelB[i] = B.applyMedianMask(x, y, height, width);
             }
         }
-        channelR = newChannelR;
-        channelG = newChannelG;
-        channelB = newChannelB;
+        R.setValues(newChannelR);
+        G.setValues(newChannelG);
+        B.setValues(newChannelB);
         updateFullImg();
-    }
-
-    public int applyMedianMaskToChannelPixel(int x1, int y1, int height, int width, int[] channel) {
-        ArrayList<Integer> list = new ArrayList<Integer>();
-
-        for (int x = -width / 2; x < width / 2 + width % 2; x++) {
-            for (int y = -height / 2; y < height / 2 + height % 2; y++) {
-                if (isValid(x + x1, y + y1)) {
-                    list.add(channel[(x1 + x) + (y1 + y) * getWidth()]);
-                } else if (isValid(x1 - x, y1 + y)) {
-                    list.add(channel[(x1 - x) + (y1 + y) * getWidth()]);
-                } else if (isValid(x1 + x, y1 - y)) {
-                    list.add(channel[(x1 + x) + (y1 - y) * getWidth()]);
-                } else if (isValid(x1 - x, y1 - y)) {
-                    list.add(channel[(x1 - x) + (y1 - y) * getWidth()]);
-                }
-            }
-        }
-        Collections.sort(list);
-        return list.get(height * width / 2 + height * width % 2);
     }
 }
