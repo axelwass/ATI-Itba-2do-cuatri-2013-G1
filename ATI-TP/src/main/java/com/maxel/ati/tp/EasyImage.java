@@ -24,7 +24,6 @@ public class EasyImage {
     Channel R;
     Channel G;
     Channel B;
-//    int[] channelA;
     int[] fullImg;
     int width;
     int height;
@@ -60,8 +59,8 @@ public class EasyImage {
             }
         }
         image.R = noisyChannel;
-        image.G = noisyChannel;
-        image.B = noisyChannel;
+        image.G = noisyChannel.clone();
+        image.B = noisyChannel.clone();
         image.updateFullImg();
         return image;
     }
@@ -75,9 +74,9 @@ public class EasyImage {
                 noisyChannel.setValue(x, y, noiseLevel);
             }
         }
-        image.R = noisyChannel;
-        image.G = noisyChannel;
-        image.B = noisyChannel;
+          image.R = noisyChannel;
+        image.G = noisyChannel.clone();
+        image.B = noisyChannel.clone();
         image.updateFullImg();
         return image;
     }
@@ -91,9 +90,9 @@ public class EasyImage {
 				noisyChannel.setValue(x, y, noiseLevel);
 			}
 		}
-        image.R = noisyChannel;
-        image.G = noisyChannel;
-        image.B = noisyChannel;
+          image.R = noisyChannel;
+        image.G = noisyChannel.clone();
+        image.B = noisyChannel.clone();
         image.updateFullImg();
         return image;
     }
@@ -225,7 +224,7 @@ public class EasyImage {
         }
     }
 
-    private void updateFullImg() {
+    public void updateFullImg() {
         for (int i = 0; i < fullImg.length; i++) {
 //            fullImg[i] = channelA[i] << 24;
             fullImg[i] = ((int) R.getValue(i) & 0x000000FF) << 16;
@@ -384,10 +383,11 @@ public class EasyImage {
 
     public void toGrey() {
         for (int i = 0; i < width * height; i++) {
-            R.setValue(i, getGreyLevel(i));
+            double aux = getGreyLevel(i);
+            R.setValue(i, aux);
         }
-        G.setValues(R.values);
-        B.setValues(R.values);
+        G = R.clone();
+        B = R.clone();
         updateFullImg();
     }
 
@@ -407,6 +407,58 @@ public class EasyImage {
         if (!isAppropiate()) {
             normalize();
         }
+        updateFullImg();
+    }
+    
+    public void module(EasyImage ei) {
+        for (int i = 0; i < width * height; i++) {
+            R.module(i, ei.R.getValue(i));
+            G.module(i, ei.G.getValue(i));
+            B.module(i, ei.B.getValue(i));
+        }
+//        if (!isAppropiate()) {
+//            normalize();
+//        }
+        updateFullImg();
+    }
+     public void module(EasyImage ei1,EasyImage ei2,EasyImage ei3) {
+        for (int i = 0; i < width * height; i++) {
+            R.module(i, ei1.R.getValue(i),ei2.R.getValue(i),ei3.R.getValue(i));
+            G.module(i, ei1.G.getValue(i),ei2.G.getValue(i),ei3.G.getValue(i));
+            B.module(i, ei1.B.getValue(i),ei2.B.getValue(i),ei3.B.getValue(i));
+        }
+//        if (!isAppropiate()) {
+//            normalize();
+//        }
+        updateFullImg();
+    }
+       public void applyFunction(FunctionToApply fn, EasyImage ei) {
+            R.applyFunction(fn, ei.R);
+            G.applyFunction(fn, ei.G);
+            B.applyFunction(fn, ei.B);
+        
+//        if (!isAppropiate()) {
+//            normalize();
+//        }
+        updateFullImg();
+    }
+     public void applyFunction(FunctionToApply fn,EasyImage... ei) {
+        EasyImage[] imgs = ei;
+        Channel[] redChnls = new Channel[imgs.length];
+		Channel[] greenChnls = new Channel[imgs.length];
+		Channel[] blueChnls = new Channel[imgs.length];
+
+		for (int i = 0; i < imgs.length; i++) {
+			redChnls[i] = imgs[i].R;
+			greenChnls[i] = imgs[i].G;
+			blueChnls[i] = imgs[i].B;
+		}
+        R.applyFunction(fn, redChnls);
+        G.applyFunction(fn, greenChnls);
+        B.applyFunction(fn, blueChnls);
+//        if (!isAppropiate()) {
+//            normalize();
+//        }
         updateFullImg();
     }
 
@@ -467,9 +519,26 @@ public class EasyImage {
         R.setValues(auxR.values);
         G.setValues(auxG.values);
         B.setValues(auxB.values);
-        if (!isAppropiate()) {
-            normalize();
-        }
+        updateFullImg();
+    }
+    
+    public void applyDirectionalMask(Mask m){
+        
+        EasyImage aux1 = new EasyImage(getBufferedImage());
+        EasyImage aux2 = new EasyImage(getBufferedImage());
+        EasyImage aux3 = new EasyImage(getBufferedImage());
+        applyMask(m);
+        normalize();
+        m.rotate45();
+        aux1.applyMask(m);
+        aux1.normalize();
+        m.rotate45();
+        aux2.applyMask(m);
+        aux2.normalize();
+        m.rotate45();
+        aux3.applyMask(m);
+        aux3.normalize();
+        applyFunction(new ModuleFunction(),aux1,aux2,aux3);
         updateFullImg();
     }
 
@@ -491,4 +560,46 @@ public class EasyImage {
         B.setValues(newChannelB);
         updateFullImg();
     }
+    
+    public void applyLocalVarianceEval(double variance){
+        R.localVarianceEvaluation(variance);
+        G.localVarianceEvaluation(variance);
+        B.localVarianceEvaluation(variance);
+        updateFullImg();
+    }
+    
+    public void applyZeroCrossing(double umbral) {
+		this.R.zeroCross(umbral);
+		this.G.zeroCross(umbral);
+		this.B.zeroCross(umbral);
+                updateFullImg();
+	}
+    public void globalThreshold() {
+		this.R.globalThreshold();
+		this.G.globalThreshold();
+		this.B.globalThreshold();
+                updateFullImg();
+	}
+    
+    public void otsuThreshold() {
+		this.R.otsuThreshold();
+		this.G.otsuThreshold();
+		this.B.otsuThreshold();
+                updateFullImg();
+	}
+    public void applyAnisotropicDiffusion(int iterations, BorderDetector bd) {
+		this.R.applyAnisotropicDiffusion(iterations, bd);
+		this.G.applyAnisotropicDiffusion(iterations, bd);
+		this.B.applyAnisotropicDiffusion(iterations, bd);
+                updateFullImg();
+	}
+
+       public void applyIsotropicDiffusion(int iterations, BorderDetector bd) {
+		this.R.applyIsotropicDiffusion(iterations, bd);
+		this.G.applyIsotropicDiffusion(iterations, bd);
+		this.B.applyIsotropicDiffusion(iterations, bd);
+                updateFullImg();
+	}
+
+
 }

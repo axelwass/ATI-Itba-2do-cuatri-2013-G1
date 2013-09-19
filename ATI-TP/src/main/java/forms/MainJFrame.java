@@ -5,7 +5,10 @@
 package forms;
 
 import com.maxel.ati.tp.EasyImage;
+import com.maxel.ati.tp.LeclercBD;
+import com.maxel.ati.tp.LorentzBD;
 import com.maxel.ati.tp.Mask;
+import com.maxel.ati.tp.ModuleFunction;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -60,6 +63,8 @@ public class MainJFrame extends javax.swing.JFrame {
         jMenuItem3 = new javax.swing.JMenuItem();
         jMenuItem4 = new javax.swing.JMenuItem();
         jMenu8 = new javax.swing.JMenu();
+        jMenuItem5 = new javax.swing.JMenuItem();
+        jMenu12 = new javax.swing.JMenu();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu2 = new javax.swing.JMenu();
         jMenu7 = new javax.swing.JMenu();
@@ -77,6 +82,7 @@ public class MainJFrame extends javax.swing.JFrame {
         Square2 = new javax.swing.JMenuItem();
         ColorDegradee2 = new javax.swing.JMenuItem();
         BWDegradee2 = new javax.swing.JMenuItem();
+        Copy2To1 = new javax.swing.JMenuItem();
         SwapImgs = new javax.swing.JMenuItem();
         Save1 = new javax.swing.JMenuItem();
         Save2 = new javax.swing.JMenuItem();
@@ -102,6 +108,28 @@ public class MainJFrame extends javax.swing.JFrame {
         Mean = new javax.swing.JMenuItem();
         MedianFilter = new javax.swing.JMenuItem();
         BorderAmp = new javax.swing.JMenuItem();
+        GaussianFilter = new javax.swing.JMenuItem();
+        Roberts = new javax.swing.JMenuItem();
+        Prewits = new javax.swing.JMenuItem();
+        Sobel = new javax.swing.JMenuItem();
+        Laplace = new javax.swing.JMenuItem();
+        LocalVarianceEval = new javax.swing.JMenuItem();
+        LaplaceGaussian = new javax.swing.JMenuItem();
+        ZeroCross = new javax.swing.JMenuItem();
+        jMenu10 = new javax.swing.JMenu();
+        SevenA = new javax.swing.JMenuItem();
+        SevenAh = new javax.swing.JMenuItem();
+        SevenAV = new javax.swing.JMenuItem();
+        Kirsh = new javax.swing.JMenuItem();
+        SevenC = new javax.swing.JMenuItem();
+        SevenD = new javax.swing.JMenuItem();
+        jMenu11 = new javax.swing.JMenu();
+        GlobalUmbralization = new javax.swing.JMenuItem();
+        Otsu = new javax.swing.JMenuItem();
+        jMenu13 = new javax.swing.JMenu();
+        jMenuItem6 = new javax.swing.JMenuItem();
+        LeclercAD = new javax.swing.JMenuItem();
+        LorentzAD = new javax.swing.JMenuItem();
         jMenu5 = new javax.swing.JMenu();
         Show2 = new javax.swing.JMenuItem();
         toGrey2 = new javax.swing.JMenuItem();
@@ -129,6 +157,10 @@ public class MainJFrame extends javax.swing.JFrame {
         jMenuItem4.setText("jMenuItem4");
 
         jMenu8.setText("jMenu8");
+
+        jMenuItem5.setText("jMenuItem5");
+
+        jMenu12.setText("jMenu12");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -245,6 +277,14 @@ public class MainJFrame extends javax.swing.JFrame {
         JMenu8.add(BWDegradee2);
 
         jMenu2.add(JMenu8);
+
+        Copy2To1.setText("Copy img2 to 1");
+        Copy2To1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                Copy2To1ActionPerformed(evt);
+            }
+        });
+        jMenu2.add(Copy2To1);
 
         SwapImgs.setText("Swap img1 & 2");
         SwapImgs.addActionListener(new java.awt.event.ActionListener() {
@@ -432,7 +472,171 @@ public class MainJFrame extends javax.swing.JFrame {
         });
         jMenu9.add(BorderAmp);
 
+        GaussianFilter.setText("GaussianFilter");
+        GaussianFilter.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                GaussianFilterActionPerformed(evt);
+            }
+        });
+        jMenu9.add(GaussianFilter);
+
+        Roberts.setText("Roberts");
+        Roberts.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                RobertsActionPerformed(evt);
+            }
+        });
+        jMenu9.add(Roberts);
+
+        Prewits.setText("Prewits");
+        Prewits.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                PrewitsActionPerformed(evt);
+            }
+        });
+        jMenu9.add(Prewits);
+
+        Sobel.setText("Sobel");
+        Sobel.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                SobelActionPerformed(evt);
+            }
+        });
+        jMenu9.add(Sobel);
+
+        Laplace.setText("Laplace");
+        Laplace.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                LaplaceActionPerformed(evt);
+            }
+        });
+        jMenu9.add(Laplace);
+
+        LocalVarianceEval.setText("LocalVarianceEval");
+        LocalVarianceEval.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                LocalVarianceEvalActionPerformed(evt);
+            }
+        });
+        jMenu9.add(LocalVarianceEval);
+
+        LaplaceGaussian.setText("Laplace Gaussian");
+        LaplaceGaussian.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                LaplaceGaussianActionPerformed(evt);
+            }
+        });
+        jMenu9.add(LaplaceGaussian);
+
+        ZeroCross.setText("Zero Cross");
+        ZeroCross.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ZeroCrossActionPerformed(evt);
+            }
+        });
+        jMenu9.add(ZeroCross);
+
         jMenu4.add(jMenu9);
+
+        jMenu10.setText("Punto 7");
+
+        SevenA.setText("a)");
+        SevenA.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                SevenAActionPerformed(evt);
+            }
+        });
+        jMenu10.add(SevenA);
+
+        SevenAh.setText("a) v");
+        SevenAh.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                SevenAhActionPerformed(evt);
+            }
+        });
+        jMenu10.add(SevenAh);
+
+        SevenAV.setText("a) h");
+        SevenAV.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                SevenAVActionPerformed(evt);
+            }
+        });
+        jMenu10.add(SevenAV);
+
+        Kirsh.setText("Kirsh");
+        Kirsh.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                KirshActionPerformed(evt);
+            }
+        });
+        jMenu10.add(Kirsh);
+
+        SevenC.setText("c)");
+        SevenC.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                SevenCActionPerformed(evt);
+            }
+        });
+        jMenu10.add(SevenC);
+
+        SevenD.setText("d)");
+        SevenD.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                SevenDActionPerformed(evt);
+            }
+        });
+        jMenu10.add(SevenD);
+
+        jMenu4.add(jMenu10);
+
+        jMenu11.setText("Umbralización");
+
+        GlobalUmbralization.setText("Global");
+        GlobalUmbralization.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                GlobalUmbralizationActionPerformed(evt);
+            }
+        });
+        jMenu11.add(GlobalUmbralization);
+
+        Otsu.setText("Otsu");
+        Otsu.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                OtsuActionPerformed(evt);
+            }
+        });
+        jMenu11.add(Otsu);
+
+        jMenu4.add(jMenu11);
+
+        jMenu13.setText("AnisotropicDifussion");
+
+        jMenuItem6.setText("Isotropic");
+        jMenuItem6.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem6ActionPerformed(evt);
+            }
+        });
+        jMenu13.add(jMenuItem6);
+
+        LeclercAD.setText("Leclerc");
+        LeclercAD.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                LeclercADActionPerformed(evt);
+            }
+        });
+        jMenu13.add(LeclercAD);
+
+        LorentzAD.setText("Lorentz");
+        LorentzAD.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                LorentzADActionPerformed(evt);
+            }
+        });
+        jMenu13.add(LorentzAD);
+
+        jMenu4.add(jMenu13);
 
         jMenuBar1.add(jMenu4);
 
@@ -577,6 +781,8 @@ public class MainJFrame extends javax.swing.JFrame {
                 try {
                     img = ImageIO.read(fc.getSelectedFile());
                     img1 = new EasyImage(img);
+                    img1.toGrey();
+                    img2 = new EasyImage(img1.getBufferedImage());
                 } catch (IOException ex) {
                     Logger.getLogger(MainJFrame.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -1667,6 +1873,339 @@ public class MainJFrame extends javax.swing.JFrame {
         img2=aux;
     }//GEN-LAST:event_SwapImgsActionPerformed
 
+    private void RobertsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RobertsActionPerformed
+        EasyImage aux = new EasyImage(img1.getBufferedImage());
+        aux.applyMask(Mask.newDxRoberts());
+        img1.applyMask(Mask.newDyRoberts());
+        img1.module(aux);
+        displayImage(img1.getBufferedImage());
+    }//GEN-LAST:event_RobertsActionPerformed
+
+    private void PrewitsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_PrewitsActionPerformed
+        int width = Integer.valueOf(JOptionPane.showInputDialog("Size: "));
+        EasyImage aux = new EasyImage(img1.getBufferedImage());
+        aux.applyMask(Mask.newDxPrewitt(width));
+        img1.applyMask(Mask.newDyPrewitt(width));
+        img1.module(aux);
+        displayImage(img1.getBufferedImage());
+    }//GEN-LAST:event_PrewitsActionPerformed
+
+    private void SobelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SobelActionPerformed
+         EasyImage aux = new EasyImage(img1.getBufferedImage());
+        aux.applyMask(Mask.newDxSobel());
+        img1.applyMask(Mask.newDySobel());
+        img1.applyFunction(new ModuleFunction(),aux);
+        displayImage(img1.getBufferedImage());
+    }//GEN-LAST:event_SobelActionPerformed
+
+    private void SevenAActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SevenAActionPerformed
+
+         Mask m = Mask.newDxSevenA();
+        img1.applyDirectionalMask(m);
+        displayImage(img1.getBufferedImage());
+    }//GEN-LAST:event_SevenAActionPerformed
+
+    private void KirshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_KirshActionPerformed
+        img1.applyDirectionalMask(Mask.newDxKirsh());
+        displayImage(img1.getBufferedImage());
+    }//GEN-LAST:event_KirshActionPerformed
+
+    private void SevenCActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SevenCActionPerformed
+        img1.applyDirectionalMask(Mask.newDxSevenC());
+        displayImage(img1.getBufferedImage());
+    }//GEN-LAST:event_SevenCActionPerformed
+
+    private void SevenDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SevenDActionPerformed
+        img1.applyDirectionalMask(Mask.newDxSevenD());
+        displayImage(img1.getBufferedImage());
+    }//GEN-LAST:event_SevenDActionPerformed
+
+    private void LaplaceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LaplaceActionPerformed
+         img1.applyMask(Mask.newLaplace());
+        displayImage(img1.getBufferedImage());
+    }//GEN-LAST:event_LaplaceActionPerformed
+
+    private void LocalVarianceEvalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LocalVarianceEvalActionPerformed
+         Double var = Double.valueOf(JOptionPane.showInputDialog("Variance: "));
+        img1.applyLocalVarianceEval(var);
+        displayImage(img1.getBufferedImage());
+    }//GEN-LAST:event_LocalVarianceEvalActionPerformed
+
+    private void Copy2To1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Copy2To1ActionPerformed
+        img1 = new EasyImage(img2.getBufferedImage());
+    }//GEN-LAST:event_Copy2To1ActionPerformed
+
+    private void LaplaceGaussianActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LaplaceGaussianActionPerformed
+               final JFrame frame = new JFrame();
+        frame.setVisible(true);
+        frame.setTitle("Aplicar filtro:");
+        frame.setBounds(1, 1, 250, 150);
+        Toolkit toolkit = getToolkit();
+        Dimension size = toolkit.getScreenSize();
+        frame.setLocation(size.width / 3 - getWidth() / 3, size.height / 3
+                - getHeight() / 3);
+        frame.setResizable(true);
+        frame.setLayout(null);
+
+        JPanel pan1 = new JPanel();
+        pan1.setBorder(BorderFactory.createTitledBorder("Propiedades:"));
+        pan1.setBounds(0, 0, 250, 80);
+
+        JLabel r1Label = new JLabel("Tamaño = ");
+        final JTextField r1Field = new JTextField("0");
+        r1Field.setColumns(3);
+
+        JLabel r2Label = new JLabel("varianza = ");
+        final JTextField r2Field = new JTextField("0");
+        r2Field.setColumns(3);
+
+        JButton okButton = new JButton("OK");
+        okButton.setSize(250, 40);
+        okButton.setBounds(0, 80, 250, 40);
+        okButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                int x1;
+                double y1;
+
+                try {
+                    x1 = Integer.valueOf(r1Field.getText());
+                    y1 = Double.valueOf(r2Field.getText());
+
+                } catch (NumberFormatException ex) {
+                    System.out.println("Los datos ingresados son invalidos");
+                    return;
+                }
+                 img1.applyMask(Mask.newLaplaceGaussianMask(x1, y1));
+        displayImage(img1.getBufferedImage());
+                frame.dispose();
+
+            }
+        });
+
+        pan1.add(r1Label);
+        pan1.add(r1Field);
+        pan1.add(r2Label);
+        pan1.add(r2Field);
+
+        frame.add(pan1);
+        frame.add(okButton);
+       
+    }//GEN-LAST:event_LaplaceGaussianActionPerformed
+
+    private void ZeroCrossActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ZeroCrossActionPerformed
+         Double var = Double.valueOf(JOptionPane.showInputDialog("Umbral: "));
+         img1.applyZeroCrossing(var);
+         displayImage(img1.getBufferedImage());
+    }//GEN-LAST:event_ZeroCrossActionPerformed
+
+    private void GlobalUmbralizationActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_GlobalUmbralizationActionPerformed
+        img1.globalThreshold();
+        displayImage(img1.getBufferedImage());
+    }//GEN-LAST:event_GlobalUmbralizationActionPerformed
+
+    private void OtsuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_OtsuActionPerformed
+        img1.otsuThreshold();
+        displayImage(img1.getBufferedImage());
+    }//GEN-LAST:event_OtsuActionPerformed
+
+    private void LeclercADActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LeclercADActionPerformed
+                  final JFrame frame = new JFrame();
+        frame.setVisible(true);
+        frame.setTitle("Aplicar filtro:");
+        frame.setBounds(1, 1, 250, 150);
+        Toolkit toolkit = getToolkit();
+        Dimension size = toolkit.getScreenSize();
+        frame.setLocation(size.width / 3 - getWidth() / 3, size.height / 3
+                - getHeight() / 3);
+        frame.setResizable(true);
+        frame.setLayout(null);
+
+        JPanel pan1 = new JPanel();
+        pan1.setBorder(BorderFactory.createTitledBorder("Propiedades:"));
+        pan1.setBounds(0, 0, 250, 80);
+
+        JLabel r1Label = new JLabel("Iteraciones = ");
+        final JTextField r1Field = new JTextField("0");
+        r1Field.setColumns(3);
+
+        JLabel r2Label = new JLabel("varianza = ");
+        final JTextField r2Field = new JTextField("0");
+        r2Field.setColumns(3);
+
+        JButton okButton = new JButton("OK");
+        okButton.setSize(250, 40);
+        okButton.setBounds(0, 80, 250, 40);
+        okButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                int x1;
+                double y1;
+
+                try {
+                    x1 = Integer.valueOf(r1Field.getText());
+                    y1 = Double.valueOf(r2Field.getText());
+
+                } catch (NumberFormatException ex) {
+                    System.out.println("Los datos ingresados son invalidos");
+                    return;
+                }
+                 img1.applyAnisotropicDiffusion(x1,new LeclercBD(y1));                    
+                displayImage(img1.getBufferedImage());
+                frame.dispose();
+
+            }
+        });
+
+        pan1.add(r1Label);
+        pan1.add(r1Field);
+        pan1.add(r2Label);
+        pan1.add(r2Field);
+
+        frame.add(pan1);
+        frame.add(okButton);
+       
+    }//GEN-LAST:event_LeclercADActionPerformed
+
+    private void LorentzADActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LorentzADActionPerformed
+         final JFrame frame = new JFrame();
+        frame.setVisible(true);
+        frame.setTitle("Aplicar filtro:");
+        frame.setBounds(1, 1, 250, 150);
+        Toolkit toolkit = getToolkit();
+        Dimension size = toolkit.getScreenSize();
+        frame.setLocation(size.width / 3 - getWidth() / 3, size.height / 3
+                - getHeight() / 3);
+        frame.setResizable(true);
+        frame.setLayout(null);
+
+        JPanel pan1 = new JPanel();
+        pan1.setBorder(BorderFactory.createTitledBorder("Propiedades:"));
+        pan1.setBounds(0, 0, 250, 80);
+
+        JLabel r1Label = new JLabel("Iteraciones = ");
+        final JTextField r1Field = new JTextField("0");
+        r1Field.setColumns(3);
+
+        JLabel r2Label = new JLabel("varianza = ");
+        final JTextField r2Field = new JTextField("0");
+        r2Field.setColumns(3);
+
+        JButton okButton = new JButton("OK");
+        okButton.setSize(250, 40);
+        okButton.setBounds(0, 80, 250, 40);
+        okButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                int x1;
+                double y1;
+
+                try {
+                    x1 = Integer.valueOf(r1Field.getText());
+                    y1 = Double.valueOf(r2Field.getText());
+
+                } catch (NumberFormatException ex) {
+                    System.out.println("Los datos ingresados son invalidos");
+                    return;
+                }
+                 img1.applyAnisotropicDiffusion(x1,new LorentzBD(y1));                    
+                displayImage(img1.getBufferedImage());
+                frame.dispose();
+
+            }
+        });
+
+        pan1.add(r1Label);
+        pan1.add(r1Field);
+        pan1.add(r2Label);
+        pan1.add(r2Field);
+
+        frame.add(pan1);
+        frame.add(okButton);
+       
+    }//GEN-LAST:event_LorentzADActionPerformed
+
+    private void GaussianFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_GaussianFilterActionPerformed
+        final JFrame frame = new JFrame();
+        frame.setVisible(true);
+        frame.setTitle("Aplicar filtro:");
+        frame.setBounds(1, 1, 250, 150);
+        Toolkit toolkit = getToolkit();
+        Dimension size = toolkit.getScreenSize();
+        frame.setLocation(size.width / 3 - getWidth() / 3, size.height / 3
+                - getHeight() / 3);
+        frame.setResizable(true);
+        frame.setLayout(null);
+
+        JPanel pan1 = new JPanel();
+        pan1.setBorder(BorderFactory.createTitledBorder("Propiedades:"));
+        pan1.setBounds(0, 0, 250, 80);
+
+        JLabel r1Label = new JLabel("tamaño = ");
+        final JTextField r1Field = new JTextField("0");
+        r1Field.setColumns(3);
+
+        JLabel r2Label = new JLabel("varianza = ");
+        final JTextField r2Field = new JTextField("0");
+        r2Field.setColumns(3);
+
+        JButton okButton = new JButton("OK");
+        okButton.setSize(250, 40);
+        okButton.setBounds(0, 80, 250, 40);
+        okButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                int x1;
+                double y1;
+
+                try {
+                    x1 = Integer.valueOf(r1Field.getText());
+                    y1 = Double.valueOf(r2Field.getText());
+
+                } catch (NumberFormatException ex) {
+                    System.out.println("Los datos ingresados son invalidos");
+                    return;
+                }
+                 img1.applyMask(Mask.newGaussianMask(x1, y1));
+                displayImage(img1.getBufferedImage());
+                frame.dispose();
+
+            }
+        });
+
+        pan1.add(r1Label);
+        pan1.add(r1Field);
+        pan1.add(r2Label);
+        pan1.add(r2Field);
+
+        frame.add(pan1);
+        frame.add(okButton);
+       
+    }//GEN-LAST:event_GaussianFilterActionPerformed
+
+    private void jMenuItem6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem6ActionPerformed
+        Integer var = Integer.valueOf(JOptionPane.showInputDialog("Iteraciones: "));
+         img1.applyIsotropicDiffusion(var, null);
+         displayImage(img1.getBufferedImage());
+    }//GEN-LAST:event_jMenuItem6ActionPerformed
+
+    private void SevenAVActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SevenAVActionPerformed
+        Mask m = Mask.newDxSevenA();
+        img1.applyMask(m);
+        displayImage(img1.getBufferedImage());
+    }//GEN-LAST:event_SevenAVActionPerformed
+
+    private void SevenAhActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SevenAhActionPerformed
+         Mask m = Mask.newDxSevenA();
+         m.rotate90();
+        img1.applyMask(m);
+        displayImage(img1.getBufferedImage());
+    }//GEN-LAST:event_SevenAhActionPerformed
+
     public void displayImage(BufferedImage img) {
         JFrame frame = new JFrame();
         JLabel lblimage = new JLabel(new ImageIcon(img));
@@ -1723,17 +2262,26 @@ public class MainJFrame extends javax.swing.JFrame {
     private javax.swing.JMenuItem ColorDegradee2;
     private javax.swing.JMenuItem Contrast1;
     private javax.swing.JMenuItem Contrast2;
+    private javax.swing.JMenuItem Copy2To1;
     private javax.swing.JMenuItem DRC1;
     private javax.swing.JMenuItem DRC2;
     private javax.swing.JMenuItem Equalize1;
     private javax.swing.JMenuItem Equalize2;
     private javax.swing.JMenuItem Exponential;
     private javax.swing.JMenuItem Gauss;
+    private javax.swing.JMenuItem GaussianFilter;
     private javax.swing.JMenuItem GenHistorgram1;
     private javax.swing.JMenuItem GenHistorgram2;
+    private javax.swing.JMenuItem GlobalUmbralization;
     private javax.swing.JMenu JMenu8;
+    private javax.swing.JMenuItem Kirsh;
+    private javax.swing.JMenuItem Laplace;
+    private javax.swing.JMenuItem LaplaceGaussian;
+    private javax.swing.JMenuItem LeclercAD;
     private javax.swing.JMenuItem LoadImg1;
     private javax.swing.JMenuItem LoadImg2;
+    private javax.swing.JMenuItem LocalVarianceEval;
+    private javax.swing.JMenuItem LorentzAD;
     private javax.swing.JMenuItem Mean;
     private javax.swing.JMenuItem MedianFilter;
     private javax.swing.JMenuItem Multiply1;
@@ -1742,23 +2290,37 @@ public class MainJFrame extends javax.swing.JFrame {
     private javax.swing.JMenuItem NegativeImg2;
     private javax.swing.JMenuItem Normalize1;
     private javax.swing.JMenuItem Normalize2;
+    private javax.swing.JMenuItem Otsu;
+    private javax.swing.JMenuItem Prewits;
     private javax.swing.JMenuItem Rayleigh;
     private javax.swing.JMenuItem Resta12;
     private javax.swing.JMenuItem Resta21;
+    private javax.swing.JMenuItem Roberts;
     private javax.swing.JMenuItem SaltNPepper;
     private javax.swing.JMenuItem SaltNPepperBW;
     private javax.swing.JMenuItem Save1;
     private javax.swing.JMenuItem Save2;
+    private javax.swing.JMenuItem SevenA;
+    private javax.swing.JMenuItem SevenAV;
+    private javax.swing.JMenuItem SevenAh;
+    private javax.swing.JMenuItem SevenC;
+    private javax.swing.JMenuItem SevenD;
     private javax.swing.JMenuItem Show1;
     private javax.swing.JMenuItem Show2;
+    private javax.swing.JMenuItem Sobel;
     private javax.swing.JMenuItem Square;
     private javax.swing.JMenuItem Square2;
     private javax.swing.JMenuItem Suma;
     private javax.swing.JMenuItem SwapImgs;
     private javax.swing.JMenuItem Umbral1;
     private javax.swing.JMenuItem Umbral2;
+    private javax.swing.JMenuItem ZeroCross;
     private javax.swing.JMenuItem getSubImage;
     private javax.swing.JMenu jMenu1;
+    private javax.swing.JMenu jMenu10;
+    private javax.swing.JMenu jMenu11;
+    private javax.swing.JMenu jMenu12;
+    private javax.swing.JMenu jMenu13;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenu jMenu3;
     private javax.swing.JMenu jMenu4;
@@ -1772,6 +2334,8 @@ public class MainJFrame extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JMenuItem jMenuItem4;
+    private javax.swing.JMenuItem jMenuItem5;
+    private javax.swing.JMenuItem jMenuItem6;
     private javax.swing.JMenuItem toGrey1;
     private javax.swing.JMenuItem toGrey2;
     // End of variables declaration//GEN-END:variables
