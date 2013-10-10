@@ -65,6 +65,7 @@ public class MainJFrame extends javax.swing.JFrame {
         jMenu8 = new javax.swing.JMenu();
         jMenuItem5 = new javax.swing.JMenuItem();
         jMenu12 = new javax.swing.JMenu();
+        jMenuItem9 = new javax.swing.JMenuItem();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu2 = new javax.swing.JMenu();
         jMenu7 = new javax.swing.JMenu();
@@ -130,6 +131,13 @@ public class MainJFrame extends javax.swing.JFrame {
         jMenuItem6 = new javax.swing.JMenuItem();
         LeclercAD = new javax.swing.JMenuItem();
         LorentzAD = new javax.swing.JMenuItem();
+        jMenu14 = new javax.swing.JMenu();
+        NoMaxSupress = new javax.swing.JMenuItem();
+        HistUmbral = new javax.swing.JMenuItem();
+        Canny = new javax.swing.JMenuItem();
+        SusanBorders = new javax.swing.JMenuItem();
+        SusanCorners = new javax.swing.JMenuItem();
+        SusanBoth = new javax.swing.JMenuItem();
         jMenu5 = new javax.swing.JMenu();
         Show2 = new javax.swing.JMenuItem();
         toGrey2 = new javax.swing.JMenuItem();
@@ -161,6 +169,8 @@ public class MainJFrame extends javax.swing.JFrame {
         jMenuItem5.setText("jMenuItem5");
 
         jMenu12.setText("jMenu12");
+
+        jMenuItem9.setText("jMenuItem9");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -637,6 +647,58 @@ public class MainJFrame extends javax.swing.JFrame {
         jMenu13.add(LorentzAD);
 
         jMenu4.add(jMenu13);
+
+        jMenu14.setText("Border detector");
+
+        NoMaxSupress.setText("No Max supress");
+        NoMaxSupress.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                NoMaxSupressActionPerformed(evt);
+            }
+        });
+        jMenu14.add(NoMaxSupress);
+
+        HistUmbral.setText("Histeresis umbral");
+        HistUmbral.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                HistUmbralActionPerformed(evt);
+            }
+        });
+        jMenu14.add(HistUmbral);
+
+        Canny.setText("Canny");
+        Canny.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                CannyActionPerformed(evt);
+            }
+        });
+        jMenu14.add(Canny);
+
+        SusanBorders.setText("Susan Borders");
+        SusanBorders.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                SusanBordersActionPerformed(evt);
+            }
+        });
+        jMenu14.add(SusanBorders);
+
+        SusanCorners.setText("Susan Corners");
+        SusanCorners.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                SusanCornersActionPerformed(evt);
+            }
+        });
+        jMenu14.add(SusanCorners);
+
+        SusanBoth.setText("Susan Both");
+        SusanBoth.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                SusanBothActionPerformed(evt);
+            }
+        });
+        jMenu14.add(SusanBoth);
+
+        jMenu4.add(jMenu14);
 
         jMenuBar1.add(jMenu4);
 
@@ -2206,6 +2268,91 @@ public class MainJFrame extends javax.swing.JFrame {
         displayImage(img1.getBufferedImage());
     }//GEN-LAST:event_SevenAhActionPerformed
 
+    private void NoMaxSupressActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_NoMaxSupressActionPerformed
+        img1.applyNoMaxSupression();
+        displayImage(img1.getBufferedImage());
+    }//GEN-LAST:event_NoMaxSupressActionPerformed
+
+    private void HistUmbralActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_HistUmbralActionPerformed
+          final JFrame frame = new JFrame();
+        frame.setVisible(true);
+        frame.setTitle("Aplicar Umbralización con Histéresis:");
+        frame.setBounds(1, 1, 250, 150);
+        Toolkit toolkit = getToolkit();
+        Dimension size = toolkit.getScreenSize();
+        frame.setLocation(size.width / 3 - getWidth() / 3, size.height / 3
+                - getHeight() / 3);
+        frame.setResizable(true);
+        frame.setLayout(null);
+
+        JPanel pan1 = new JPanel();
+        pan1.setBorder(BorderFactory.createTitledBorder("Propiedades:"));
+        pan1.setBounds(0, 0, 250, 80);
+
+        JLabel r1Label = new JLabel("t1 = ");
+        final JTextField r1Field = new JTextField("0");
+        r1Field.setColumns(3);
+
+        JLabel r2Label = new JLabel("t2 = ");
+        final JTextField r2Field = new JTextField("0");
+        r2Field.setColumns(3);
+
+        JButton okButton = new JButton("OK");
+        okButton.setSize(250, 40);
+        okButton.setBounds(0, 80, 250, 40);
+        okButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                int x1;
+                int y1;
+
+                try {
+                    x1 = Integer.valueOf(r1Field.getText());
+                    y1 = Integer.valueOf(r2Field.getText());
+
+                } catch (NumberFormatException ex) {
+                    System.out.println("Los datos ingresados son invalidos");
+                    return;
+                }
+                 img1.applyHistUmbralization(x1,y1);
+                displayImage(img1.getBufferedImage());
+                frame.dispose();
+
+            }
+        });
+
+        pan1.add(r1Label);
+        pan1.add(r1Field);
+        pan1.add(r2Label);
+        pan1.add(r2Field);
+
+        frame.add(pan1);
+        frame.add(okButton);
+       
+        
+    }//GEN-LAST:event_HistUmbralActionPerformed
+
+    private void CannyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CannyActionPerformed
+        img1.applyCanny();
+        displayImage(img1.getBufferedImage());
+    }//GEN-LAST:event_CannyActionPerformed
+
+    private void SusanBordersActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SusanBordersActionPerformed
+        img1.applySusan(true, false, 0xFF0000);
+        displayImage(img1.getBufferedImage());
+    }//GEN-LAST:event_SusanBordersActionPerformed
+
+    private void SusanCornersActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SusanCornersActionPerformed
+                img1.applySusan(false, true, 0xFF0000);
+        displayImage(img1.getBufferedImage());
+    }//GEN-LAST:event_SusanCornersActionPerformed
+
+    private void SusanBothActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SusanBothActionPerformed
+                img1.applySusan(true, true, 0xFF0000);
+        displayImage(img1.getBufferedImage());
+    }//GEN-LAST:event_SusanBothActionPerformed
+
     public void displayImage(BufferedImage img) {
         JFrame frame = new JFrame();
         JLabel lblimage = new JLabel(new ImageIcon(img));
@@ -2256,6 +2403,7 @@ public class MainJFrame extends javax.swing.JFrame {
     private javax.swing.JMenuItem BWDegradee;
     private javax.swing.JMenuItem BWDegradee2;
     private javax.swing.JMenuItem BorderAmp;
+    private javax.swing.JMenuItem Canny;
     private javax.swing.JMenuItem Circle;
     private javax.swing.JMenuItem Circle2;
     private javax.swing.JMenuItem ColorDegradee;
@@ -2273,6 +2421,7 @@ public class MainJFrame extends javax.swing.JFrame {
     private javax.swing.JMenuItem GenHistorgram1;
     private javax.swing.JMenuItem GenHistorgram2;
     private javax.swing.JMenuItem GlobalUmbralization;
+    private javax.swing.JMenuItem HistUmbral;
     private javax.swing.JMenu JMenu8;
     private javax.swing.JMenuItem Kirsh;
     private javax.swing.JMenuItem Laplace;
@@ -2288,6 +2437,7 @@ public class MainJFrame extends javax.swing.JFrame {
     private javax.swing.JMenuItem Multiply2;
     private javax.swing.JMenuItem NegativeImg1;
     private javax.swing.JMenuItem NegativeImg2;
+    private javax.swing.JMenuItem NoMaxSupress;
     private javax.swing.JMenuItem Normalize1;
     private javax.swing.JMenuItem Normalize2;
     private javax.swing.JMenuItem Otsu;
@@ -2311,6 +2461,9 @@ public class MainJFrame extends javax.swing.JFrame {
     private javax.swing.JMenuItem Square;
     private javax.swing.JMenuItem Square2;
     private javax.swing.JMenuItem Suma;
+    private javax.swing.JMenuItem SusanBorders;
+    private javax.swing.JMenuItem SusanBoth;
+    private javax.swing.JMenuItem SusanCorners;
     private javax.swing.JMenuItem SwapImgs;
     private javax.swing.JMenuItem Umbral1;
     private javax.swing.JMenuItem Umbral2;
@@ -2321,6 +2474,7 @@ public class MainJFrame extends javax.swing.JFrame {
     private javax.swing.JMenu jMenu11;
     private javax.swing.JMenu jMenu12;
     private javax.swing.JMenu jMenu13;
+    private javax.swing.JMenu jMenu14;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenu jMenu3;
     private javax.swing.JMenu jMenu4;
@@ -2336,6 +2490,7 @@ public class MainJFrame extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem4;
     private javax.swing.JMenuItem jMenuItem5;
     private javax.swing.JMenuItem jMenuItem6;
+    private javax.swing.JMenuItem jMenuItem9;
     private javax.swing.JMenuItem toGrey1;
     private javax.swing.JMenuItem toGrey2;
     // End of variables declaration//GEN-END:variables

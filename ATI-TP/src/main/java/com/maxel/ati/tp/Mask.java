@@ -265,6 +265,34 @@ public class Mask {
         return m;
     }
 
+    public static Mask newSusanMask(){
+        Mask mask = new Mask(7);
+
+		for(int i = - mask.getWidth() / 2 ; i <= mask.getWidth() / 2; i++) {
+			for(int j = - mask.getHeight() / 2; j <= mask.getHeight() / 2; j++) {
+				mask.setValue(i, j, 1);
+			}
+		}
+
+		mask.setValue(-3, -3, 0);
+		mask.setValue(-3, -2, 0);
+		mask.setValue(-3, 2, 0);
+		mask.setValue(-3, 3, 0);
+
+		mask.setValue(-2, -3, 0);
+		mask.setValue(-2, 3, 0);
+
+		mask.setValue(2, -3, 0);
+		mask.setValue(2, 3, 0);
+
+		mask.setValue(3, -3, 0);
+		mask.setValue(3, -2, 0);
+		mask.setValue(3, 2, 0);
+		mask.setValue(3, 3, 0);
+
+		return mask;
+    }
+     
     public Mask(int width, int height) {
         this.height = height;
         this.width = width;

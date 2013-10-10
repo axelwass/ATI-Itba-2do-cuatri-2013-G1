@@ -6,6 +6,8 @@ package com.maxel.ati.tp;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  *
@@ -249,6 +251,16 @@ class Channel {
         return newColor;
     }
 
+     public void applyMask(Mask m) {
+        Channel aux = new Channel(width, height);
+        for (int x = 0; x < width; x++) {
+            for (int y = 0; y < height; y++) {
+                aux.setValue(x, y, this.applyMask(x, y, m));
+            }
+        }
+       this.setValues(aux.values);
+    }
+    
     public double applyMedianMask(int x1, int y1, int height, int width) {
         ArrayList<Double> list = new ArrayList<Double>();
 
@@ -551,4 +563,175 @@ class Channel {
     public Channel clone(){
         return new Channel(values.clone(), width, height);
     }
+
+    public void suppressNoMaxs() {
+		Mask mdx = Mask.newDxSobel();
+                Mask mdy = Mask.newDySobel();
+		Channel G1 = this.clone();
+		G1.applyMask(mdx);
+		Channel G2 = this.clone();
+		G2.applyMask(mdy);
+
+		// obtenemos ángulo del gradiente
+		Channel direction = new Channel(width, height);
+		for (int x = 0; x < width; x++) {
+			for (int y = 0; y < height; y++) {
+				double pxG1 = G1.getValue(x, y);
+				double pxG2 = G2.getValue(x, y);
+				double anAngle = 0;
+				if (pxG2 != 0) {
+					anAngle = Math.atan(pxG1 / pxG2);
+				}
+				anAngle *= (180 / Math.PI);
+				direction.setValue(x, y, anAngle);
+			}
+		}
+
+		G1.applyFunction(new ModuleFunction(), G2);
+		this.values = G1.values;
+
+		suppressNoMaxs(this);
+	}
+
+	private void suppressNoMaxs(Channel directionChannel) {
+		for (int x = 1; x < width - 1; x++) {
+			for (int y = 1; y < height - 1; y++) {
+				double pixel = getValue(x, y);
+				if (pixel == 0) {
+					continue;
+				}
+
+				double direction = directionChannel.getValue(x, y);
+				double neighbor1 = 0;
+				double neighbor2 = 0;
+				if (direction >= -90 && direction < -45) {
+					neighbor1 = getValue(x, y - 1);
+					neighbor2 = getValue(x, y + 1);
+				} else if (direction >= -45 && direction < 0) {
+					neighbor1 = getValue(x + 1, y - 1);
+					neighbor2 = getValue(x - 1, y + 1);
+				} else if (direction >= 0 && direction < 45) {
+					neighbor1 = getValue(x + 1, y);
+					neighbor2 = getValue(x - 1, y);
+				} else if (direction >= 45 && direction <= 90) {
+					neighbor1 = getValue(x + 1, y + 1);
+					neighbor2 = getValue(x - 1, y - 1);
+				}
+
+				// Si los vecinos superan se borran
+				if (neighbor1 > pixel || neighbor2 > pixel) {
+					setValue(x, y, 0);
+				}
+			}
+		}
+	}
+
+    void applyHistUmbralization(int t1, int t2) {
+        Channel auxChannel = clone();
+        for(int i=0;i<auxChannel.values.length;i++){
+            if(auxChannel.getValue(i)>t2){
+                auxChannel.setValue(i,255);
+            }else if(auxChannel.getValue(i)<t1){
+                auxChannel.setValue(i,0);
+            }
+        }
+        Channel auxChannel2 = auxChannel.clone();
+        for(int x=0;x<auxChannel.width;x++){
+            for(int y=0;y<auxChannel.height;y++){
+                double pixel = auxChannel.getValue(x, y);
+                if(pixel != 0 && pixel != 255){
+                    for(Double d:getValidNeighbors(x, y)){
+                        if(d==255){
+                            pixel =255;
+                            auxChannel2.setValue(x, y, pixel);
+                            break;
+                        }
+                    }
+                    if(pixel!=255){
+                        auxChannel2.setValue(x, y, 0);
+                    }
+                }
+            }
+        }
+        this.values = auxChannel2.values;
+    }
+    
+    private List<Double> getValidNeighbors(int x, int y){
+        List<Double> l = new LinkedList<Double>();
+        if(isValid(x-1, y)){
+            l.add(getValue(x-1, y));
+        }
+        if(isValid(x, y-1)){
+            l.add(getValue(x, y-1));
+        }
+        if(isValid(x+1, y)){
+            l.add(getValue(x+1, y));
+        }
+        if(isValid(x, y+1)){
+            l.add(getValue(x, y+1));
+        }
+        return l;
+    }
+
+    void applyCanny() {
+        Channel auxChannel = clone();
+        auxChannel.applyMask(Mask.newGaussianMask(11, 0.5));
+        auxChannel.suppressNoMaxs();
+        int umbral = (int)auxChannel.getGlobalThresholdValue();
+        auxChannel.applyHistUmbralization(umbral, umbral+40);
+        this.values = auxChannel.values;
+    }
+
+    void applySusan(boolean showBorders, boolean showCorners, int color) {
+        Mask mask = Mask.newSusanMask();
+		Channel newChannel = new Channel(this.width, this.height);
+		for (int x = 0; x < width; x++) {
+			for (int y = 0; y < height; y++) {
+				double newValue = getValue(x, y);
+				double s_ro = applySusanPixelMask(x, y, mask);
+				if ((showBorders && isBorder(s_ro))
+						|| (showCorners && isCorner(s_ro))) {
+					newValue = color;
+				}
+				newChannel.setValue(x, y, newValue);
+			}
+		}
+		this.values = newChannel.values;
+    }
+    
+    private boolean isBorder(double a){
+        return a>0.38&&a<0.62;
+    }
+    private boolean isCorner(double a){
+        return a>0.63&&a<0.88;
+    }
+    
+    private double applySusanPixelMask(int x, int y, Mask mask) {
+		boolean ignoreByX = x < mask.getWidth() / 2
+				|| x > this.getWidth() - mask.getWidth() / 2;
+		boolean ignoreByY = y < mask.getHeight() / 2
+				|| y > this.getHeight() - mask.getHeight() / 2;
+		if (ignoreByX || ignoreByY) {
+			return 1;
+		}
+
+		final int threshold = 27;
+		int nRo = 0;
+		double ro = this.getValue(x, y);
+		for (int i = -mask.getWidth() / 2; i <= mask.getWidth() / 2; i++) {
+			for (int j = -mask.getHeight() / 2; j <= mask.getHeight() / 2; j++) {
+				if (this.isValid(x + i, y + j) && mask.getValue(i, j) == 1) {
+					double eachPixel = this.getValue(x + i, y + j);
+					//sumo todos los pixeles q cumplen con el umbral
+                                        if (Math.abs(ro - eachPixel) < threshold) {
+						nRo += 1;
+					}
+				}
+			}
+		}
+
+		final double N = 37.0;
+		double sRo = 1 - nRo / N;
+		return sRo;
+	}
 }

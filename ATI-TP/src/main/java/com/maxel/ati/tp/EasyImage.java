@@ -74,7 +74,7 @@ public class EasyImage {
                 noisyChannel.setValue(x, y, noiseLevel);
             }
         }
-          image.R = noisyChannel;
+        image.R = noisyChannel;
         image.G = noisyChannel.clone();
         image.B = noisyChannel.clone();
         image.updateFullImg();
@@ -84,13 +84,13 @@ public class EasyImage {
     public static EasyImage newExponential(int width, int height, double lambda) {
         EasyImage image = new EasyImage(width, height);
         Channel noisyChannel = new Channel(image.getWidth(), image.getHeight());
-		for (int x = 0; x < noisyChannel.getWidth(); x++) {
-			for (int y = 0; y < noisyChannel.getHeight(); y++) {
-				double noiseLevel = NoiseGenerator.exponential(lambda);
-				noisyChannel.setValue(x, y, noiseLevel);
-			}
-		}
-          image.R = noisyChannel;
+        for (int x = 0; x < noisyChannel.getWidth(); x++) {
+            for (int y = 0; y < noisyChannel.getHeight(); y++) {
+                double noiseLevel = NoiseGenerator.exponential(lambda);
+                noisyChannel.setValue(x, y, noiseLevel);
+            }
+        }
+        image.R = noisyChannel;
         image.G = noisyChannel.clone();
         image.B = noisyChannel.clone();
         image.updateFullImg();
@@ -409,7 +409,7 @@ public class EasyImage {
         }
         updateFullImg();
     }
-    
+
     public void module(EasyImage ei) {
         for (int i = 0; i < width * height; i++) {
             R.module(i, ei.R.getValue(i));
@@ -421,38 +421,41 @@ public class EasyImage {
 //        }
         updateFullImg();
     }
-     public void module(EasyImage ei1,EasyImage ei2,EasyImage ei3) {
+
+    public void module(EasyImage ei1, EasyImage ei2, EasyImage ei3) {
         for (int i = 0; i < width * height; i++) {
-            R.module(i, ei1.R.getValue(i),ei2.R.getValue(i),ei3.R.getValue(i));
-            G.module(i, ei1.G.getValue(i),ei2.G.getValue(i),ei3.G.getValue(i));
-            B.module(i, ei1.B.getValue(i),ei2.B.getValue(i),ei3.B.getValue(i));
+            R.module(i, ei1.R.getValue(i), ei2.R.getValue(i), ei3.R.getValue(i));
+            G.module(i, ei1.G.getValue(i), ei2.G.getValue(i), ei3.G.getValue(i));
+            B.module(i, ei1.B.getValue(i), ei2.B.getValue(i), ei3.B.getValue(i));
         }
 //        if (!isAppropiate()) {
 //            normalize();
 //        }
         updateFullImg();
     }
-       public void applyFunction(FunctionToApply fn, EasyImage ei) {
-            R.applyFunction(fn, ei.R);
-            G.applyFunction(fn, ei.G);
-            B.applyFunction(fn, ei.B);
-        
+
+    public void applyFunction(FunctionToApply fn, EasyImage ei) {
+        R.applyFunction(fn, ei.R);
+        G.applyFunction(fn, ei.G);
+        B.applyFunction(fn, ei.B);
+
 //        if (!isAppropiate()) {
 //            normalize();
 //        }
         updateFullImg();
     }
-     public void applyFunction(FunctionToApply fn,EasyImage... ei) {
+
+    public void applyFunction(FunctionToApply fn, EasyImage... ei) {
         EasyImage[] imgs = ei;
         Channel[] redChnls = new Channel[imgs.length];
-		Channel[] greenChnls = new Channel[imgs.length];
-		Channel[] blueChnls = new Channel[imgs.length];
+        Channel[] greenChnls = new Channel[imgs.length];
+        Channel[] blueChnls = new Channel[imgs.length];
 
-		for (int i = 0; i < imgs.length; i++) {
-			redChnls[i] = imgs[i].R;
-			greenChnls[i] = imgs[i].G;
-			blueChnls[i] = imgs[i].B;
-		}
+        for (int i = 0; i < imgs.length; i++) {
+            redChnls[i] = imgs[i].R;
+            greenChnls[i] = imgs[i].G;
+            blueChnls[i] = imgs[i].B;
+        }
         R.applyFunction(fn, redChnls);
         G.applyFunction(fn, greenChnls);
         B.applyFunction(fn, blueChnls);
@@ -521,9 +524,9 @@ public class EasyImage {
         B.setValues(auxB.values);
         updateFullImg();
     }
-    
-    public void applyDirectionalMask(Mask m){
-        
+
+    public void applyDirectionalMask(Mask m) {
+
         EasyImage aux1 = new EasyImage(getBufferedImage());
         EasyImage aux2 = new EasyImage(getBufferedImage());
         EasyImage aux3 = new EasyImage(getBufferedImage());
@@ -538,7 +541,7 @@ public class EasyImage {
         m.rotate45();
         aux3.applyMask(m);
         aux3.normalize();
-        applyFunction(new ModuleFunction(),aux1,aux2,aux3);
+        applyFunction(new ModuleFunction(), aux1, aux2, aux3);
         updateFullImg();
     }
 
@@ -560,46 +563,75 @@ public class EasyImage {
         B.setValues(newChannelB);
         updateFullImg();
     }
-    
-    public void applyLocalVarianceEval(double variance){
+
+    public void applyLocalVarianceEval(double variance) {
         R.localVarianceEvaluation(variance);
         G.localVarianceEvaluation(variance);
         B.localVarianceEvaluation(variance);
         updateFullImg();
     }
-    
+
     public void applyZeroCrossing(double umbral) {
-		this.R.zeroCross(umbral);
-		this.G.zeroCross(umbral);
-		this.B.zeroCross(umbral);
-                updateFullImg();
-	}
+        this.R.zeroCross(umbral);
+        this.G.zeroCross(umbral);
+        this.B.zeroCross(umbral);
+        updateFullImg();
+    }
+
     public void globalThreshold() {
-		this.R.globalThreshold();
-		this.G.globalThreshold();
-		this.B.globalThreshold();
-                updateFullImg();
-	}
-    
+        this.R.globalThreshold();
+        this.G.globalThreshold();
+        this.B.globalThreshold();
+        updateFullImg();
+    }
+
     public void otsuThreshold() {
-		this.R.otsuThreshold();
-		this.G.otsuThreshold();
-		this.B.otsuThreshold();
-                updateFullImg();
-	}
+        this.R.otsuThreshold();
+        this.G.otsuThreshold();
+        this.B.otsuThreshold();
+        updateFullImg();
+    }
+
     public void applyAnisotropicDiffusion(int iterations, BorderDetector bd) {
-		this.R.applyAnisotropicDiffusion(iterations, bd);
-		this.G.applyAnisotropicDiffusion(iterations, bd);
-		this.B.applyAnisotropicDiffusion(iterations, bd);
-                updateFullImg();
-	}
+        this.R.applyAnisotropicDiffusion(iterations, bd);
+        this.G.applyAnisotropicDiffusion(iterations, bd);
+        this.B.applyAnisotropicDiffusion(iterations, bd);
+        updateFullImg();
+    }
 
-       public void applyIsotropicDiffusion(int iterations, BorderDetector bd) {
-		this.R.applyIsotropicDiffusion(iterations, bd);
-		this.G.applyIsotropicDiffusion(iterations, bd);
-		this.B.applyIsotropicDiffusion(iterations, bd);
-                updateFullImg();
-	}
+    public void applyIsotropicDiffusion(int iterations, BorderDetector bd) {
+        this.R.applyIsotropicDiffusion(iterations, bd);
+        this.G.applyIsotropicDiffusion(iterations, bd);
+        this.B.applyIsotropicDiffusion(iterations, bd);
+        updateFullImg();
+    }
 
+    public void applyNoMaxSupression() {
+        this.R.suppressNoMaxs();
+        this.G.suppressNoMaxs();
+        this.B.suppressNoMaxs();
+        updateFullImg();
+    }
 
+    public void applyHistUmbralization(int t1, int t2) {
+        this.R.applyHistUmbralization(t1, t2);
+        this.G.applyHistUmbralization(t1, t2);
+        this.B.applyHistUmbralization(t1, t2);
+        updateFullImg();
+    }
+
+    public void applyCanny() {
+        this.R.applyCanny();
+        this.G.applyCanny();
+        this.B.applyCanny();
+        updateFullImg();
+    }
+    
+    public void applySusan(boolean showBorders, boolean showCorners, int color){
+        
+        this.R.applySusan(showBorders,showCorners, (color >> 16) & 0x000000FF);
+        this.G.applySusan(showBorders,showCorners, (color >> 8) & 0x000000FF);
+        this.B.applySusan(showBorders,showCorners,(color) & 0x000000FF);
+        updateFullImg();
+    }
 }
