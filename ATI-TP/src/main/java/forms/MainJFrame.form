@@ -617,6 +617,52 @@
                 </MenuItem>
               </SubComponents>
             </Menu>
+            <Menu class="javax.swing.JMenu" name="jMenu15">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Hough Transform"/>
+              </Properties>
+              <SubComponents>
+                <MenuItem class="javax.swing.JMenuItem" name="HoughLines">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="Lines"/>
+                  </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="HoughLinesActionPerformed"/>
+                  </Events>
+                </MenuItem>
+                <MenuItem class="javax.swing.JMenuItem" name="HoughTransformCicles">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="Circles"/>
+                  </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="HoughTransformCiclesActionPerformed"/>
+                  </Events>
+                </MenuItem>
+              </SubComponents>
+            </Menu>
+            <Menu class="javax.swing.JMenu" name="jMenu16">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Tracking"/>
+              </Properties>
+              <SubComponents>
+                <MenuItem class="javax.swing.JMenuItem" name="trackingImage">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="image"/>
+                  </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="trackingImageActionPerformed"/>
+                  </Events>
+                </MenuItem>
+                <MenuItem class="javax.swing.JMenuItem" name="trackingVideo">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="video"/>
+                  </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="trackingVideoActionPerformed"/>
+                  </Events>
+                </MenuItem>
+              </SubComponents>
+            </Menu>
           </SubComponents>
         </Menu>
         <Menu class="javax.swing.JMenu" name="jMenu5">

@@ -4,11 +4,26 @@
  */
 package forms;
 
+import com.maxel.ati.tp.DrawingContainer;
 import com.maxel.ati.tp.EasyImage;
 import com.maxel.ati.tp.LeclercBD;
 import com.maxel.ati.tp.LorentzBD;
 import com.maxel.ati.tp.Mask;
 import com.maxel.ati.tp.ModuleFunction;
+import com.maxel.ati.tp.Panel;
+import com.maxel.ati.tp.TrackingDialog;
+import com.maxel.ati.tp.Window;
+import com.xuggle.xuggler.Global;
+import com.xuggle.xuggler.ICodec;
+import com.xuggle.xuggler.IContainer;
+import com.xuggle.xuggler.IPacket;
+import com.xuggle.xuggler.IPixelFormat;
+import com.xuggle.xuggler.IStream;
+import com.xuggle.xuggler.IStreamCoder;
+import com.xuggle.xuggler.IVideoPicture;
+import com.xuggle.xuggler.IVideoResampler;
+import com.xuggle.xuggler.video.ConverterFactory;
+import com.xuggle.xuggler.video.IConverter;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -19,12 +34,18 @@ import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -37,9 +58,15 @@ import javax.swing.JTextField;
  * @author maximo
  */
 public class MainJFrame extends javax.swing.JFrame {
-
+    final AtomicInteger toIgnore = new AtomicInteger(50);
     EasyImage img1 = null;
     EasyImage img2 = null;
+    public Window w;
+    public Panel panel;
+    boolean firstCall = true;
+    BufferedImage currentImage;
+    private Object lock = "";
+    private BlockingQueue<BufferedImage> frames = new LinkedBlockingQueue<BufferedImage>(10);
 
     /**
      * Creates new form MainJFrame
@@ -138,6 +165,12 @@ public class MainJFrame extends javax.swing.JFrame {
         SusanBorders = new javax.swing.JMenuItem();
         SusanCorners = new javax.swing.JMenuItem();
         SusanBoth = new javax.swing.JMenuItem();
+        jMenu15 = new javax.swing.JMenu();
+        HoughLines = new javax.swing.JMenuItem();
+        HoughTransformCicles = new javax.swing.JMenuItem();
+        jMenu16 = new javax.swing.JMenu();
+        trackingImage = new javax.swing.JMenuItem();
+        trackingVideo = new javax.swing.JMenuItem();
         jMenu5 = new javax.swing.JMenu();
         Show2 = new javax.swing.JMenuItem();
         toGrey2 = new javax.swing.JMenuItem();
@@ -700,6 +733,46 @@ public class MainJFrame extends javax.swing.JFrame {
 
         jMenu4.add(jMenu14);
 
+        jMenu15.setText("Hough Transform");
+
+        HoughLines.setText("Lines");
+        HoughLines.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                HoughLinesActionPerformed(evt);
+            }
+        });
+        jMenu15.add(HoughLines);
+
+        HoughTransformCicles.setText("Circles");
+        HoughTransformCicles.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                HoughTransformCiclesActionPerformed(evt);
+            }
+        });
+        jMenu15.add(HoughTransformCicles);
+
+        jMenu4.add(jMenu15);
+
+        jMenu16.setText("Tracking");
+
+        trackingImage.setText("image");
+        trackingImage.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                trackingImageActionPerformed(evt);
+            }
+        });
+        jMenu16.add(trackingImage);
+
+        trackingVideo.setText("video");
+        trackingVideo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                trackingVideoActionPerformed(evt);
+            }
+        });
+        jMenu16.add(trackingVideo);
+
+        jMenu4.add(jMenu16);
+
         jMenuBar1.add(jMenu4);
 
         jMenu5.setText("Edit img 2");
@@ -907,7 +980,7 @@ public class MainJFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_Resta21ActionPerformed
 
     private void CircleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CircleActionPerformed
-        img1 = EasyImage.newCircle(200, 200);
+        img1 = EasyImage.newCircle(100, 100);
         displayImage(img1.getBufferedImage());
     }//GEN-LAST:event_CircleActionPerformed
 
@@ -1696,7 +1769,7 @@ public class MainJFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_SaltNPepperActionPerformed
 
     private void SaltNPepperBWActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SaltNPepperBWActionPerformed
-            final JFrame frame = new JFrame();
+        final JFrame frame = new JFrame();
         frame.setVisible(true);
         frame.setTitle("Agregar Salt and Pepper:");
         frame.setBounds(1, 1, 250, 150);
@@ -1755,7 +1828,7 @@ public class MainJFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_SaltNPepperBWActionPerformed
 
     private void MedianFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MedianFilterActionPerformed
-                    final JFrame frame = new JFrame();
+        final JFrame frame = new JFrame();
         frame.setVisible(true);
         frame.setTitle("Aplicar filtro:");
         frame.setBounds(1, 1, 250, 150);
@@ -1872,7 +1945,7 @@ public class MainJFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_MeanActionPerformed
 
     private void BorderAmpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BorderAmpActionPerformed
-              final JFrame frame = new JFrame();
+        final JFrame frame = new JFrame();
         frame.setVisible(true);
         frame.setTitle("Aplicar filtro:");
         frame.setBounds(1, 1, 250, 150);
@@ -1932,7 +2005,7 @@ public class MainJFrame extends javax.swing.JFrame {
     private void SwapImgsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SwapImgsActionPerformed
         EasyImage aux = img1;
         img1 = img2;
-        img2=aux;
+        img2 = aux;
     }//GEN-LAST:event_SwapImgsActionPerformed
 
     private void RobertsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RobertsActionPerformed
@@ -1953,16 +2026,16 @@ public class MainJFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_PrewitsActionPerformed
 
     private void SobelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SobelActionPerformed
-         EasyImage aux = new EasyImage(img1.getBufferedImage());
+        EasyImage aux = new EasyImage(img1.getBufferedImage());
         aux.applyMask(Mask.newDxSobel());
         img1.applyMask(Mask.newDySobel());
-        img1.applyFunction(new ModuleFunction(),aux);
+        img1.applyFunction(new ModuleFunction(), aux);
         displayImage(img1.getBufferedImage());
     }//GEN-LAST:event_SobelActionPerformed
 
     private void SevenAActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SevenAActionPerformed
 
-         Mask m = Mask.newDxSevenA();
+        Mask m = Mask.newDxSevenA();
         img1.applyDirectionalMask(m);
         displayImage(img1.getBufferedImage());
     }//GEN-LAST:event_SevenAActionPerformed
@@ -1983,12 +2056,12 @@ public class MainJFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_SevenDActionPerformed
 
     private void LaplaceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LaplaceActionPerformed
-         img1.applyMask(Mask.newLaplace());
+        img1.applyMask(Mask.newLaplace());
         displayImage(img1.getBufferedImage());
     }//GEN-LAST:event_LaplaceActionPerformed
 
     private void LocalVarianceEvalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LocalVarianceEvalActionPerformed
-         Double var = Double.valueOf(JOptionPane.showInputDialog("Variance: "));
+        Double var = Double.valueOf(JOptionPane.showInputDialog("Variance: "));
         img1.applyLocalVarianceEval(var);
         displayImage(img1.getBufferedImage());
     }//GEN-LAST:event_LocalVarianceEvalActionPerformed
@@ -1998,7 +2071,7 @@ public class MainJFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_Copy2To1ActionPerformed
 
     private void LaplaceGaussianActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LaplaceGaussianActionPerformed
-               final JFrame frame = new JFrame();
+        final JFrame frame = new JFrame();
         frame.setVisible(true);
         frame.setTitle("Aplicar filtro:");
         frame.setBounds(1, 1, 250, 150);
@@ -2039,8 +2112,8 @@ public class MainJFrame extends javax.swing.JFrame {
                     System.out.println("Los datos ingresados son invalidos");
                     return;
                 }
-                 img1.applyMask(Mask.newLaplaceGaussianMask(x1, y1));
-        displayImage(img1.getBufferedImage());
+                img1.applyMask(Mask.newLaplaceGaussianMask(x1, y1));
+                displayImage(img1.getBufferedImage());
                 frame.dispose();
 
             }
@@ -2053,13 +2126,13 @@ public class MainJFrame extends javax.swing.JFrame {
 
         frame.add(pan1);
         frame.add(okButton);
-       
+
     }//GEN-LAST:event_LaplaceGaussianActionPerformed
 
     private void ZeroCrossActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ZeroCrossActionPerformed
-         Double var = Double.valueOf(JOptionPane.showInputDialog("Umbral: "));
-         img1.applyZeroCrossing(var);
-         displayImage(img1.getBufferedImage());
+        Double var = Double.valueOf(JOptionPane.showInputDialog("Umbral: "));
+        img1.applyZeroCrossing(var);
+        displayImage(img1.getBufferedImage());
     }//GEN-LAST:event_ZeroCrossActionPerformed
 
     private void GlobalUmbralizationActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_GlobalUmbralizationActionPerformed
@@ -2073,7 +2146,7 @@ public class MainJFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_OtsuActionPerformed
 
     private void LeclercADActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LeclercADActionPerformed
-                  final JFrame frame = new JFrame();
+        final JFrame frame = new JFrame();
         frame.setVisible(true);
         frame.setTitle("Aplicar filtro:");
         frame.setBounds(1, 1, 250, 150);
@@ -2114,7 +2187,7 @@ public class MainJFrame extends javax.swing.JFrame {
                     System.out.println("Los datos ingresados son invalidos");
                     return;
                 }
-                 img1.applyAnisotropicDiffusion(x1,new LeclercBD(y1));                    
+                img1.applyAnisotropicDiffusion(x1, new LeclercBD(y1));
                 displayImage(img1.getBufferedImage());
                 frame.dispose();
 
@@ -2128,11 +2201,11 @@ public class MainJFrame extends javax.swing.JFrame {
 
         frame.add(pan1);
         frame.add(okButton);
-       
+
     }//GEN-LAST:event_LeclercADActionPerformed
 
     private void LorentzADActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LorentzADActionPerformed
-         final JFrame frame = new JFrame();
+        final JFrame frame = new JFrame();
         frame.setVisible(true);
         frame.setTitle("Aplicar filtro:");
         frame.setBounds(1, 1, 250, 150);
@@ -2173,7 +2246,7 @@ public class MainJFrame extends javax.swing.JFrame {
                     System.out.println("Los datos ingresados son invalidos");
                     return;
                 }
-                 img1.applyAnisotropicDiffusion(x1,new LorentzBD(y1));                    
+                img1.applyAnisotropicDiffusion(x1, new LorentzBD(y1));
                 displayImage(img1.getBufferedImage());
                 frame.dispose();
 
@@ -2187,7 +2260,7 @@ public class MainJFrame extends javax.swing.JFrame {
 
         frame.add(pan1);
         frame.add(okButton);
-       
+
     }//GEN-LAST:event_LorentzADActionPerformed
 
     private void GaussianFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_GaussianFilterActionPerformed
@@ -2232,7 +2305,7 @@ public class MainJFrame extends javax.swing.JFrame {
                     System.out.println("Los datos ingresados son invalidos");
                     return;
                 }
-                 img1.applyMask(Mask.newGaussianMask(x1, y1));
+                img1.applyMask(Mask.newGaussianMask(x1, y1));
                 displayImage(img1.getBufferedImage());
                 frame.dispose();
 
@@ -2246,13 +2319,13 @@ public class MainJFrame extends javax.swing.JFrame {
 
         frame.add(pan1);
         frame.add(okButton);
-       
+
     }//GEN-LAST:event_GaussianFilterActionPerformed
 
     private void jMenuItem6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem6ActionPerformed
         Integer var = Integer.valueOf(JOptionPane.showInputDialog("Iteraciones: "));
-         img1.applyIsotropicDiffusion(var, null);
-         displayImage(img1.getBufferedImage());
+        img1.applyIsotropicDiffusion(var, null);
+        displayImage(img1.getBufferedImage());
     }//GEN-LAST:event_jMenuItem6ActionPerformed
 
     private void SevenAVActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SevenAVActionPerformed
@@ -2262,8 +2335,8 @@ public class MainJFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_SevenAVActionPerformed
 
     private void SevenAhActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SevenAhActionPerformed
-         Mask m = Mask.newDxSevenA();
-         m.rotate90();
+        Mask m = Mask.newDxSevenA();
+        m.rotate90();
         img1.applyMask(m);
         displayImage(img1.getBufferedImage());
     }//GEN-LAST:event_SevenAhActionPerformed
@@ -2274,7 +2347,7 @@ public class MainJFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_NoMaxSupressActionPerformed
 
     private void HistUmbralActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_HistUmbralActionPerformed
-          final JFrame frame = new JFrame();
+        final JFrame frame = new JFrame();
         frame.setVisible(true);
         frame.setTitle("Aplicar Umbralización con Histéresis:");
         frame.setBounds(1, 1, 250, 150);
@@ -2315,7 +2388,7 @@ public class MainJFrame extends javax.swing.JFrame {
                     System.out.println("Los datos ingresados son invalidos");
                     return;
                 }
-                 img1.applyHistUmbralization(x1,y1);
+                img1.applyHistUmbralization(x1, y1);
                 displayImage(img1.getBufferedImage());
                 frame.dispose();
 
@@ -2329,8 +2402,8 @@ public class MainJFrame extends javax.swing.JFrame {
 
         frame.add(pan1);
         frame.add(okButton);
-       
-        
+
+
     }//GEN-LAST:event_HistUmbralActionPerformed
 
     private void CannyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CannyActionPerformed
@@ -2339,25 +2412,326 @@ public class MainJFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_CannyActionPerformed
 
     private void SusanBordersActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SusanBordersActionPerformed
-        img1.applySusan(true, false, 0xFF0000);
+        img1 = img1.applySusan(true, false, 0xFF0000);
         displayImage(img1.getBufferedImage());
     }//GEN-LAST:event_SusanBordersActionPerformed
 
     private void SusanCornersActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SusanCornersActionPerformed
-                img1.applySusan(false, true, 0xFF0000);
+        img1.applySusan(false, true, 0xFF0000);
         displayImage(img1.getBufferedImage());
     }//GEN-LAST:event_SusanCornersActionPerformed
 
     private void SusanBothActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SusanBothActionPerformed
-                img1.applySusan(true, true, 0xFF0000);
+        img1.applySusan(true, true, 0xFF0000);
         displayImage(img1.getBufferedImage());
     }//GEN-LAST:event_SusanBothActionPerformed
+
+    private void HoughLinesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_HoughLinesActionPerformed
+        img1.houghLinesTransform(0.75, 0xFF0000);
+        displayImage(img1.getBufferedImage());
+    }//GEN-LAST:event_HoughLinesActionPerformed
+
+    private void HoughTransformCiclesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_HoughTransformCiclesActionPerformed
+        img1.houghCirclesTransform(0.75, 0xFF0000);
+        displayImage(img1.getBufferedImage());
+    }//GEN-LAST:event_HoughTransformCiclesActionPerformed
+
+    private void trackingImageActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_trackingImageActionPerformed
+        Window w = new Window();
+        final Panel panel = new Panel(w);
+        panel.loadImage(img1);
+        panel.repaint();
+
+        w.getContentPane().add(panel, BorderLayout.CENTER);
+        w.setSize(img1.getWidth() + 50, img1.getHeight() + 50);
+        w.setVisible(true);
+        w.setResizable(true);
+        final TrackingDialog trackingDialog = new TrackingDialog(panel);
+        trackingDialog.setOnClick(new Runnable() {
+            public void run() {
+                img1.tracking(trackingDialog.drawingContainer, panel, false);
+            }
+        });
+        trackingDialog.setVisible(true);
+
+
+    }//GEN-LAST:event_trackingImageActionPerformed
+
+    private void trackingVideoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_trackingVideoActionPerformed
+        final JFileChooser chooser = new JFileChooser();
+        chooser.showOpenDialog(this);
+        w = new Window();
+         panel = new Panel(w);
+        w.getContentPane().add(panel, BorderLayout.CENTER);
+        
+        w.setVisible(true);
+        w.setResizable(true);
+       
+        final IContainer container = IContainer.make();
+        Thread t = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                File f = chooser.getSelectedFile();
+                try {
+                    String filename = f.getAbsoluteFile().getAbsolutePath();
+                    if (container.open(filename, IContainer.Type.READ, null) < 0) {
+                        throw new IllegalArgumentException("could not open file: " + filename);
+                    }
+                    
+
+                    int numStreams = container.getNumStreams();
+                    // and iterate through the streams to find the first video stream
+                    int videoStreamId = -1;
+                    IStreamCoder videoCoder = null;
+                    for (int i = 0; i < numStreams; i++) {
+                        // Find the stream object
+                        IStream stream = container.getStream(i);
+                        // Get the pre-configured decoder that can decode this stream;
+                        IStreamCoder coder = stream.getStreamCoder();
+
+                        if (coder.getCodecType() == ICodec.Type.CODEC_TYPE_VIDEO) {
+                            videoStreamId = i;
+                            videoCoder = coder;
+                            break;
+                        }
+                    }
+                    if (videoStreamId == -1) {
+                        throw new RuntimeException("could not find video stream in container: "
+                                + filename);
+                    }
+
+                    IConverter myConverter =
+                            ConverterFactory.createConverter(ConverterFactory.XUGGLER_BGR_24,
+                            IPixelFormat.Type.BGR24, videoCoder.getWidth(), videoCoder.getHeight());
+
+
+                    /*
+                     * Now we have found the video stream in this file.  Let's open up our decoder so it can
+                     * do work.
+                     */
+                    if (videoCoder.open() < 0) {
+                        throw new RuntimeException("could not open video decoder for container: "
+                                + filename);
+                    }
+
+                    IVideoResampler resampler = null;
+                    if (videoCoder.getPixelType() != IPixelFormat.Type.BGR24) {
+                        // if this stream is not in BGR24, we're going to need to
+                        // convert it.  The VideoResampler does that for us.
+                        resampler = IVideoResampler.make(videoCoder.getWidth(),
+                                videoCoder.getHeight(), IPixelFormat.Type.BGR24,
+                                videoCoder.getWidth(), videoCoder.getHeight(), videoCoder.getPixelType());
+                        if (resampler == null) {
+                            throw new RuntimeException("could not create color space "
+                                    + "resampler for: " + filename);
+                        }
+                    }
+
+                    /*
+                     * Now, we start walking through the container looking at each packet.
+                     */
+                    IPacket packet = IPacket.make();
+                    long firstTimestampInStream = Global.NO_PTS;
+                    long systemClockStartTime = 0;
+                    
+                    while (container.readNextPacket(packet) >= 0) {
+                        /*
+                         * Now we have a packet, let's see if it belongs to our video stream
+                         */
+                        if (packet.getStreamIndex() == videoStreamId) {
+                            /*
+                             * We allocate a new picture to get the data out of Xuggler
+                             */
+                            IVideoPicture picture = IVideoPicture.make(videoCoder.getPixelType(),
+                                    videoCoder.getWidth(), videoCoder.getHeight());
+
+                            int offset = 0;
+                            while (offset < packet.getSize()) {
+                                /*
+                                 * Now, we decode the video, checking for any errors.
+                                 *
+                                 */
+                                int bytesDecoded = videoCoder.decodeVideo(picture, packet, offset);
+                                if (bytesDecoded < 0) {
+                                    throw new RuntimeException("got error decoding video in: "
+                                            + filename);
+                                }
+                                offset += bytesDecoded;
+
+                                /*
+                                 * Some decoders will consume data in a packet, but will not be able to construct
+                                 * a full video picture yet.  Therefore you should always check if you
+                                 * got a complete picture from the decoder
+                                 */
+                                if (picture.isComplete()) {
+                                    IVideoPicture newPic = picture;
+                                    /*
+                                     * If the resampler is not null, that means we didn't get the
+                                     * video in BGR24 format and
+                                     * need to convert it into BGR24 format.
+                                     */
+                                    if (resampler != null) {
+                                        // we must resample
+                                        newPic = IVideoPicture.make(resampler.getOutputPixelFormat(),
+                                                picture.getWidth(), picture.getHeight());
+                                        if (resampler.resample(newPic, picture) < 0) {
+                                            throw new RuntimeException("could not resample video from: "
+                                                    + filename);
+                                        }
+                                    }
+                                    if (newPic.getPixelType() != IPixelFormat.Type.BGR24) {
+                                        throw new RuntimeException("could not decode video"
+                                                + " as BGR 24 bit data in: " + filename);
+                                    }
+
+                                    /**
+                                     * We could just display the images as
+                                     * quickly as we decode them, but it turns
+                                     * out we can decode a lot faster than you
+                                     * think.
+                                     *
+                                     * So instead, the following code does a
+                                     * poor-man's version of trying to match up
+                                     * the frame-rate requested for each
+                                     * IVideoPicture with the system clock time
+                                     * on your computer.
+                                     *
+                                     * Remember that all Xuggler IAudioSamples
+                                     * and IVideoPicture objects always give
+                                     * timestamps in Microseconds, relative to
+                                     * the first decoded item. If instead you
+                                     * used the packet timestamps, they can be
+                                     * in different units depending on your
+                                     * IContainer, and IStream and things can
+                                     * get hairy quickly.
+                                     */
+                                    if (firstTimestampInStream == Global.NO_PTS) {
+                                        // This is our first time through
+                                        firstTimestampInStream = picture.getTimeStamp();
+                                        // get the starting clock time so we can hold up frames
+                                        // until the right time.
+                                        systemClockStartTime = System.currentTimeMillis();
+                                    } else {
+                                        long systemClockCurrentTime = System.currentTimeMillis();
+                                        long millisecondsClockTimeSinceStartofVideo =
+                                                systemClockCurrentTime - systemClockStartTime;
+                                        // compute how long for this frame since the first frame in the
+                                        // stream.
+                                        // remember that IVideoPicture and IAudioSamples timestamps are
+                                        // always in MICROSECONDS,
+                                        // so we divide by 1000 to get milliseconds.
+                                        long millisecondsStreamTimeSinceStartOfVideo =
+                                                (picture.getTimeStamp() - firstTimestampInStream) / 1000;
+                                        final long millisecondsTolerance = 50; // and we give ourselfs 50 ms of tolerance
+                                        final long millisecondsToSleep =
+                                                (millisecondsStreamTimeSinceStartOfVideo
+                                                - (millisecondsClockTimeSinceStartofVideo
+                                                + millisecondsTolerance));
+                                        if (millisecondsToSleep > 0) {
+//                                            try {
+//                                                Thread.sleep(millisecondsToSleep);
+//                                            } catch (InterruptedException e2) {
+//                                                // we might get this when the user closes the dialog box, so
+//                                                // just return from the method.
+//                                                return;
+//                                            }
+                                        }
+                                    }
+
+                                    // And finally, convert the BGR24 to an Java buffered image
+                                    BufferedImage javaImage = myConverter.toImage(newPic);
+                                    if(toIgnore.getAndDecrement()<0){
+                                    frames.put(javaImage);
+                                    }
+                                }
+                            }
+                        } else {
+                            /*
+                             * This packet isn't part of our video stream, so we just
+                             * silently drop it.
+                             */
+                            do {
+                            } while (false);
+                        }
+
+                    }
+                    
+
+                } catch (Exception e1) {
+                    e1.printStackTrace();
+                }
+            }
+        });
+
+        t.start();
+
+
+        final Mask mask = Mask.newGaussianMask(5, 5);
+
+        final CountDownLatch latch = new CountDownLatch(1);
+
+        new Thread(new Runnable() {
+            double[] avgIn = null;
+            EasyImage img = null;
+
+            @Override
+            public void run() {
+                try {
+                    do {
+
+
+                        BufferedImage javaImage = frames.poll(1, TimeUnit.MINUTES);
+//                                frames.clear();
+                        
+                        if (img == null) {
+                            img = new EasyImage(javaImage);
+                        } else {
+                            img.reuse(javaImage);
+                        }
+
+
+                        if (firstCall) {
+                            
+                            w.setSize(img.getWidth() + 50, img.getHeight() + 50);
+                            panel.loadImage(img);
+                            panel.setImage(img);
+                            firstCall = false;
+                            panel.setVisible(true);
+                            panel.setWorkingImage(img);
+                            panel.repaint();
+                            TrackingDialog trackingDialog = new TrackingDialog(panel);
+                            trackingDialog.setVisible(true);
+                            trackingDialog.setOnClick(new Runnable() {
+                                @Override
+                                public void run() {
+                                    firstCall = false;
+                                    latch.countDown();
+                                }
+                            });
+                            latch.await();
+                            
+                        } else {
+                            
+                            panel.setWorkingImage(img.clone());
+                            img.applyMask(mask);
+                            img.tracking(panel.getDrawingContainer(), panel, false);
+                            
+                        }
+
+
+                    } while (true);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+    }//GEN-LAST:event_trackingVideoActionPerformed
 
     public void displayImage(BufferedImage img) {
         JFrame frame = new JFrame();
         JLabel lblimage = new JLabel(new ImageIcon(img));
         frame.getContentPane().add(lblimage, BorderLayout.CENTER);
-        frame.setSize(img.getWidth()+50, img.getHeight()+50);
+        frame.setSize(img.getWidth() + 50, img.getHeight() + 50);
         frame.setVisible(true);
         frame.setResizable(true);
     }
@@ -2422,6 +2796,8 @@ public class MainJFrame extends javax.swing.JFrame {
     private javax.swing.JMenuItem GenHistorgram2;
     private javax.swing.JMenuItem GlobalUmbralization;
     private javax.swing.JMenuItem HistUmbral;
+    private javax.swing.JMenuItem HoughLines;
+    private javax.swing.JMenuItem HoughTransformCicles;
     private javax.swing.JMenu JMenu8;
     private javax.swing.JMenuItem Kirsh;
     private javax.swing.JMenuItem Laplace;
@@ -2475,6 +2851,8 @@ public class MainJFrame extends javax.swing.JFrame {
     private javax.swing.JMenu jMenu12;
     private javax.swing.JMenu jMenu13;
     private javax.swing.JMenu jMenu14;
+    private javax.swing.JMenu jMenu15;
+    private javax.swing.JMenu jMenu16;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenu jMenu3;
     private javax.swing.JMenu jMenu4;
@@ -2493,5 +2871,7 @@ public class MainJFrame extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem9;
     private javax.swing.JMenuItem toGrey1;
     private javax.swing.JMenuItem toGrey2;
+    private javax.swing.JMenuItem trackingImage;
+    private javax.swing.JMenuItem trackingVideo;
     // End of variables declaration//GEN-END:variables
 }

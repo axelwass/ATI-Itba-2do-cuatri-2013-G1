@@ -5,8 +5,10 @@
 package com.maxel.ati.tp;
 
 import java.awt.Color;
+import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.awt.image.ColorModel;
+import java.util.List;
 import java.util.Random;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
@@ -29,6 +31,12 @@ public class EasyImage {
     int height;
     ColorModel cm;
 
+    @Override
+    public EasyImage clone(){
+        EasyImage aux = new EasyImage(img);
+        return aux; 
+    }
+    
     public static EasyImage newSquare(int width, int height) {
         EasyImage image = new EasyImage(width, height);
         Color blackColor = Color.BLACK;
@@ -123,7 +131,7 @@ public class EasyImage {
             for (int x = 0; x < width; x++) {
                 double aTerm = Math.pow(x - width / 2, 2);
                 double bTerm = Math.pow(y - height / 2, 2);
-                double rTerm = Math.pow(40, 2);
+                double rTerm = Math.pow(30, 2);
                 boolean fitsInCircle = (aTerm + bTerm) <= rTerm;
                 Color colorToApply = fitsInCircle ? whiteColor : blackColor;
                 image.setRGB(x, y, colorToApply.getRGB());
@@ -187,7 +195,18 @@ public class EasyImage {
         G = new Channel(width, height);
         B = new Channel(width, height);
     }
-
+    
+    public void reuse(BufferedImage img){
+         this.img = img;
+//        cm = img.getColorModel();
+        this.width = img.getWidth();
+        this.height = img.getHeight();
+        fullImg = img.getRGB(0, 0, img.getWidth(), img.getHeight(), null, 0, img.getWidth());
+        R = new Channel(width, height);
+        G = new Channel(width, height);
+        B = new Channel(width, height);
+        updateChannels();
+    }
     public EasyImage getSubImage(int startX, int startY, int endX, int endY) {
         EasyImage newImg = new EasyImage(endX - startX, endY - startY);
         for (int x = startX; x < endX; x++) {
@@ -310,6 +329,18 @@ public class EasyImage {
         if (!isAppropiate()) {
             normalize();
         }
+    }
+    
+    public void put(EasyImage img2){
+        for (int i = 0; i < fullImg.length; i++) {
+            if(img2.R.getValue(i) == 255)
+                R.setValue(i, img2.R.getValue(i));
+            if(img2.G.getValue(i) == 255)
+                G.setValue(i, img2.G.getValue(i));
+            if(img2.B.getValue(i) == 255)
+                B.setValue(i, img2.B.getValue(i));
+        }
+        updateFullImg();
     }
 
     public void setRGB(int x, int y, int rgb) {
@@ -627,11 +658,145 @@ public class EasyImage {
         updateFullImg();
     }
     
-    public void applySusan(boolean showBorders, boolean showCorners, int color){
-        
-        this.R.applySusan(showBorders,showCorners, (color >> 16) & 0x000000FF);
-        this.G.applySusan(showBorders,showCorners, (color >> 8) & 0x000000FF);
-        this.B.applySusan(showBorders,showCorners,(color) & 0x000000FF);
+    public EasyImage applySusan(boolean showBorders, boolean showCorners, int color){
+        EasyImage aux = new EasyImage(width, height);
+        aux.R = this.R.applySusan(showBorders,showCorners, 255);
+        aux.G = this.G.applySusan(showBorders,showCorners, 0);
+        aux.B = this.B.applySusan(showBorders,showCorners, 0);
+        this.put(aux);
         updateFullImg();
+        aux.updateFullImg();
+        return aux;
+    }
+    
+    public void houghLinesTransform(double eps,int color){
+        EasyImage img = clone();
+      
+        this.R.houghLinesTransform(eps,(color >> 16) & 0x000000FF);
+        this.G.houghLinesTransform(eps,(color >> 8) & 0x000000FF);
+        this.B.houghLinesTransform(eps,(color) & 0x000000FF);
+//        this.add(img);
+        updateFullImg();
+    }
+
+    public void houghCirclesTransform(double eps, int color) {
+        EasyImage img = clone();
+        this.R.houghCirclesTransform(eps,(color >> 16) & 0x000000FF);
+        this.G.houghCirclesTransform(eps,(color >> 8) & 0x000000FF);
+        this.B.houghCirclesTransform(eps,(color) & 0x000000FF);
+//        this.add(img);
+        updateFullImg();
+    }
+
+    public void tracking(DrawingContainer drawingContainer, Panel panel, boolean first) {
+            if (first) {
+            return;
+        }
+            long from = System.currentTimeMillis();
+        TitaFunction tita = new TitaFunction(drawingContainer.inner, this.R.getHeight(), this.R.getWidth());
+        int times = (int)(1.5 * Math.max(this.R.getHeight(), this.R.getWidth()));
+        boolean changes = true;
+        List<Point> in = tita.getIn();
+        List<Point> out = tita.getOut();
+
+        double[] averageIn = drawingContainer.avgIn =
+                (drawingContainer.avgIn == null) ? getAverage(in) : drawingContainer.avgIn;
+        double[] averageOut = drawingContainer.avgOut =
+                (drawingContainer.avgOut == null) ? getAverage(out) : drawingContainer.avgOut;
+
+        while((times > 0) && changes){
+            changes = false;
+            List<Point> lOut = tita.getlOut();
+            for(Point p: lOut){
+                if( Fd(p, averageIn, averageOut) > 0){
+                    tita.setlIn(p);
+                    for(Point y: TitaFunction.N4(p)){
+                        if(tita.isOut(y)){
+                            tita.setlOut(y);
+                        }
+                    }
+                    for(Point y: TitaFunction.N4(p)){
+                        if(tita.islIn(y)){
+                            tita.setIn(y);
+                        }
+                    }
+                    changes = true;
+                }
+            }
+            List<Point> lIn = tita.getlIn();
+            for(Point p: lIn){
+                if( Fd(p, averageIn, averageOut) < 0){
+                    tita.setlOut(p);
+                    for(Point y: TitaFunction.N4(p)){
+                        if(tita.isIn(y)){
+                            tita.setlIn(y);
+                        }
+                    }
+                    for(Point y: TitaFunction.N4(p)){
+                        if(tita.islOut(y)){
+                            tita.setOut(y);
+                        }
+                    }
+                    changes = true;
+
+                }
+            }
+
+            drawingContainer.inner.clear();
+            drawingContainer.in.clear();
+            drawingContainer.in.addAll(tita.getlOut());
+            drawingContainer.inner.addAll(tita.getIn());
+            panel.repaint();
+//            try {
+//                Thread.sleep(50);
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
+//            }
+
+            times--;
+
+        }
+
+
+        drawingContainer.inner.clear();
+        drawingContainer.in.clear();
+        drawingContainer.in.addAll(tita.getlOut());
+        drawingContainer.inner.addAll(tita.getIn());
+        panel.repaint();
+        System.out.println("tiempo: " + (System.currentTimeMillis()-from));
+    }
+    private double[] getAverage(List<Point> l){
+        double[] ret = new double[3];
+        ret[0] = 0;
+        ret[1] = 0;
+        ret[2] = 0;
+        for(Point c: l){
+            ret[0]+=this.R.getValue(c.x, c.y);
+        }
+        ret[0]=ret[0]/l.size();
+
+        for(Point c: l){
+            ret[1]+=this.G.getValue(c.x, c.y);
+        }
+        ret[1]=ret[1]/l.size();
+
+        for(Point c: l){
+            ret[2]+=this.B.getValue(c.x, c.y);
+        }
+        ret[2]=ret[2]/l.size();
+
+        return ret;
+    }
+
+    private double Fd(Point p, double[] averageIn, double[] averageOut) {
+        double p1, p2;
+        double red, green, blue;
+        red = this.R.getValue(p.x, p.y);
+        green = this.G.getValue(p.x, p.y);
+        blue =  this.B.getValue(p.x, p.y);
+
+        p1 = Math.sqrt(Math.pow((averageIn[0] - red), 2) + Math.pow((averageIn[1] - green), 2) + Math.pow((averageIn[2] - blue), 2));
+        p2 = Math.sqrt(Math.pow((averageOut[0] - red), 2) + Math.pow((averageOut[1] - green), 2) + Math.pow((averageOut[2] - blue), 2));
+        return p2 - p1;
     }
 }
