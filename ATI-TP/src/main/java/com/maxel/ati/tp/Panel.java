@@ -46,7 +46,8 @@ public class Panel extends JPanel {
         /**
          * Paints an image in the panel
          */
-        public void paintComponent(Graphics g) {
+        @Override
+		public void paintComponent(Graphics g) {
                 super.paintComponent(g);
 
                 if (workingImage != null) {

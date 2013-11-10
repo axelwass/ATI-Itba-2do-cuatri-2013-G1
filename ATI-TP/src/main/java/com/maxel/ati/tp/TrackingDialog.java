@@ -43,7 +43,6 @@ public class TrackingDialog extends JDialog {
         drawingContainer.innerBorder = new ArrayList<Point>();
         drawingContainer.in = new ArrayList<Point>();
         final MouseListener listener = new MouseListener(){
-            @Override
             public void mouseClicked(MouseEvent event) {
                 int x = event.getX();
                 int y = event.getY();
@@ -59,24 +58,19 @@ public class TrackingDialog extends JDialog {
                 }
             }
 
-            @Override
             public void mouseEntered(MouseEvent e) {}
 
-            @Override
             public void mouseExited(MouseEvent e) {}
 
-            @Override
             public void mousePressed(MouseEvent e) {}
 
-            @Override
             public void mouseReleased(MouseEvent e) {}
         };
 
 
         okButton.addActionListener(new ActionListener(){
-            @Override
             public void actionPerformed(ActionEvent e){
-                EasyImage aux = ((EasyImage)panel.getImage()).clone();
+                EasyImage aux = panel.getImage().clone();
                 aux.applyMask(Mask.newGaussianMask(5, 5));
                 aux.tracking(panel.getDrawingContainer(), panel, true);
                 panel.repaint();

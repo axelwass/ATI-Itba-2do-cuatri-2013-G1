@@ -18,7 +18,7 @@ public class Mask {
         Mask m = new Mask(width, height);
         for (int x = -width / 2; x < width / 2 + width % 2; x++) {
             for (int y = -height / 2; y < height / 2 + height % 2; y++) {
-                m.setValue(x, y, 1.0 / (double) (width * height));
+                m.setValue(x, y, 1.0 / (width * height));
             }
         }
         return m;
@@ -29,9 +29,9 @@ public class Mask {
         for (int x = -width / 2; x < width / 2 + width % 2; x++) {
             for (int y = -height / 2; y < height / 2 + height % 2; y++) {
                 if (x == 0 && y == 0) {
-                    m.setValue(x, y, (width * height - 1.0) / (double) (width * height));
+                    m.setValue(x, y, (width * height - 1.0) / (width * height));
                 } else {
-                    m.setValue(x, y, -1.0 / (double) (width * height));
+                    m.setValue(x, y, -1.0 / (width * height));
                 }
             }
         }

@@ -30,7 +30,6 @@ class RoThetaLine implements Comparable<RoThetaLine>{
 		return (int) (3 * ro + 5 * theta);
 	}
 
-	@Override
 	public int compareTo(RoThetaLine obj) {
 		return obj.ammount - ammount;
 	}

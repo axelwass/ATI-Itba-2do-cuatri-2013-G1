@@ -155,9 +155,9 @@ public class EasyImage {
             green = green + greenFactor;
             blue = blue + blueFactor;
 
-            c1 = new Color(cAux.getRGB() + (int) ((int) red * 0x010000)
-                    + (int) ((int) green * 0x000100)
-                    + (int) ((int) blue * 0x000001));
+            c1 = new Color(cAux.getRGB() + (int) red * 0x010000
+                    + (int) green * 0x000100
+                    + (int) blue * 0x000001);
         }
 
         return degrade;

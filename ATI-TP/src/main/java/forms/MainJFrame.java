@@ -910,7 +910,12 @@ public class MainJFrame extends javax.swing.JFrame {
         });
         jMenu6.add(Resta21);
 
-        jMenuItem7.setText("jMenuItem7");
+        jMenuItem7.setText("SIFT matching");
+        jMenuItem7.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+            	jMenuItem7ActionPerformed(evt);
+            }
+        });
         jMenu6.add(jMenuItem7);
 
         jMenuBar1.add(jMenu6);
@@ -1084,7 +1089,6 @@ public class MainJFrame extends javax.swing.JFrame {
         okButton.setSize(250, 40);
         okButton.setBounds(0, 160, 250, 40);
         okButton.addActionListener(new ActionListener() {
-            @Override
             public void actionPerformed(ActionEvent e) {
 
                 int r1;
@@ -1278,7 +1282,6 @@ public class MainJFrame extends javax.swing.JFrame {
         okButton.setSize(250, 40);
         okButton.setBounds(0, 160, 250, 40);
         okButton.addActionListener(new ActionListener() {
-            @Override
             public void actionPerformed(ActionEvent e) {
 
                 int r1;
@@ -1384,7 +1387,6 @@ public class MainJFrame extends javax.swing.JFrame {
         okButton.setSize(250, 40);
         okButton.setBounds(0, 160, 250, 40);
         okButton.addActionListener(new ActionListener() {
-            @Override
             public void actionPerformed(ActionEvent e) {
 
                 int x1;
@@ -1466,7 +1468,6 @@ public class MainJFrame extends javax.swing.JFrame {
         okButton.setSize(250, 40);
         okButton.setBounds(0, 160, 250, 40);
         okButton.addActionListener(new ActionListener() {
-            @Override
             public void actionPerformed(ActionEvent e) {
 
                 int x1;
@@ -1545,7 +1546,6 @@ public class MainJFrame extends javax.swing.JFrame {
         okButton.setSize(250, 40);
         okButton.setBounds(0, 160, 250, 40);
         okButton.addActionListener(new ActionListener() {
-            @Override
             public void actionPerformed(ActionEvent e) {
 
                 int x1;
@@ -1622,7 +1622,6 @@ public class MainJFrame extends javax.swing.JFrame {
         okButton.setSize(250, 40);
         okButton.setBounds(0, 160, 250, 40);
         okButton.addActionListener(new ActionListener() {
-            @Override
             public void actionPerformed(ActionEvent e) {
 
                 int x1;
@@ -1690,7 +1689,6 @@ public class MainJFrame extends javax.swing.JFrame {
         okButton.setSize(250, 40);
         okButton.setBounds(0, 80, 250, 40);
         okButton.addActionListener(new ActionListener() {
-            @Override
             public void actionPerformed(ActionEvent e) {
 
                 double x1;
@@ -1765,7 +1763,6 @@ public class MainJFrame extends javax.swing.JFrame {
         okButton.setSize(250, 40);
         okButton.setBounds(0, 80, 250, 40);
         okButton.addActionListener(new ActionListener() {
-            @Override
             public void actionPerformed(ActionEvent e) {
 
                 double x1;
@@ -1824,7 +1821,6 @@ public class MainJFrame extends javax.swing.JFrame {
         okButton.setSize(250, 40);
         okButton.setBounds(0, 80, 250, 40);
         okButton.addActionListener(new ActionListener() {
-            @Override
             public void actionPerformed(ActionEvent e) {
 
                 double x1;
@@ -1883,7 +1879,6 @@ public class MainJFrame extends javax.swing.JFrame {
         okButton.setSize(250, 40);
         okButton.setBounds(0, 80, 250, 40);
         okButton.addActionListener(new ActionListener() {
-            @Override
             public void actionPerformed(ActionEvent e) {
 
                 int x1;
@@ -1942,7 +1937,6 @@ public class MainJFrame extends javax.swing.JFrame {
         okButton.setSize(250, 40);
         okButton.setBounds(0, 80, 250, 40);
         okButton.addActionListener(new ActionListener() {
-            @Override
             public void actionPerformed(ActionEvent e) {
 
                 int x1;
@@ -2000,7 +1994,6 @@ public class MainJFrame extends javax.swing.JFrame {
         okButton.setSize(250, 40);
         okButton.setBounds(0, 80, 250, 40);
         okButton.addActionListener(new ActionListener() {
-            @Override
             public void actionPerformed(ActionEvent e) {
 
                 int x1;
@@ -2126,7 +2119,6 @@ public class MainJFrame extends javax.swing.JFrame {
         okButton.setSize(250, 40);
         okButton.setBounds(0, 80, 250, 40);
         okButton.addActionListener(new ActionListener() {
-            @Override
             public void actionPerformed(ActionEvent e) {
 
                 int x1;
@@ -2201,7 +2193,6 @@ public class MainJFrame extends javax.swing.JFrame {
         okButton.setSize(250, 40);
         okButton.setBounds(0, 80, 250, 40);
         okButton.addActionListener(new ActionListener() {
-            @Override
             public void actionPerformed(ActionEvent e) {
 
                 int x1;
@@ -2260,7 +2251,6 @@ public class MainJFrame extends javax.swing.JFrame {
         okButton.setSize(250, 40);
         okButton.setBounds(0, 80, 250, 40);
         okButton.addActionListener(new ActionListener() {
-            @Override
             public void actionPerformed(ActionEvent e) {
 
                 int x1;
@@ -2319,7 +2309,6 @@ public class MainJFrame extends javax.swing.JFrame {
         okButton.setSize(250, 40);
         okButton.setBounds(0, 80, 250, 40);
         okButton.addActionListener(new ActionListener() {
-            @Override
             public void actionPerformed(ActionEvent e) {
 
                 int x1;
@@ -2402,7 +2391,6 @@ public class MainJFrame extends javax.swing.JFrame {
         okButton.setSize(250, 40);
         okButton.setBounds(0, 80, 250, 40);
         okButton.addActionListener(new ActionListener() {
-            @Override
             public void actionPerformed(ActionEvent e) {
 
                 int x1;
@@ -2463,7 +2451,26 @@ public class MainJFrame extends javax.swing.JFrame {
         img1.houghCirclesTransform(0.75, 0xFF0000);
         displayImage(img1.getBufferedImage());
     }//GEN-LAST:event_HoughTransformCiclesActionPerformed
-
+    
+    private void jMenuItem7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_HoughTransformCiclesActionPerformed
+    	Vector<Feature> f1 = SIFT.getFeatures(img1.getBufferedImage());
+    	Vector<Feature> f2 = SIFT.getFeatures(img2.getBufferedImage());
+    	 int times = 0;
+         for (Feature feature : f1) {
+                 for (Feature inner : f2) {
+                         if (feature.descriptorDistance(inner) < 0.1) {
+                                 times++;
+                         }
+                 }
+         }
+         img1.detectFeatures();
+         img2.detectFeatures();
+         double pct = times/(double) f1.size();
+         pct*=100;
+         displayImage(img1.getBufferedImage());
+         displayImage(img2.getBufferedImage());
+         System.out.println("Se encontraron " + times + "características en común, un " + pct + "%");
+    }
     private void trackingImageActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_trackingImageActionPerformed
         Window w = new Window();
         final Panel panel = new Panel(w);
@@ -2497,7 +2504,6 @@ public class MainJFrame extends javax.swing.JFrame {
        
         final IContainer container = IContainer.make();
         Thread t = new Thread(new Runnable() {
-            @Override
             public void run() {
                 File f = chooser.getSelectedFile();
                 try {
@@ -2702,7 +2708,6 @@ public class MainJFrame extends javax.swing.JFrame {
             double[] avgIn = null;
             EasyImage img = null;
 
-            @Override
             public void run() {
                 try {
                     do {
@@ -2730,7 +2735,6 @@ public class MainJFrame extends javax.swing.JFrame {
                             TrackingDialog trackingDialog = new TrackingDialog(panel);
                             trackingDialog.setVisible(true);
                             trackingDialog.setOnClick(new Runnable() {
-                                @Override
                                 public void run() {
                                     firstCall = false;
                                     latch.countDown();
@@ -2797,7 +2801,6 @@ public class MainJFrame extends javax.swing.JFrame {
         okButton.setSize(250, 40);
         okButton.setBounds(0, 160, 250, 40);
         okButton.addActionListener(new ActionListener() {
-            @Override
             public void actionPerformed(ActionEvent e) {
 
                 int r1;

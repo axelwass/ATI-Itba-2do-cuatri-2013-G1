@@ -169,7 +169,6 @@ public class TitaFunction {
         final int midX = (maxX + minX) / 2, midY = (maxY + minY) / 2;
 
         Collections.sort(result, new Comparator<Point>() {
-            @Override
             public int compare(Point p1, Point p2) {
                 if ((dist(p1.y, p1.x, midX,  midY) - dist(p2.y, p2.x, midX, midY)) > 0) {
                     return 1;

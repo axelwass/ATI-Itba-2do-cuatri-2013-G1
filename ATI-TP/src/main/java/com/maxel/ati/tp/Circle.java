@@ -36,7 +36,6 @@ class Circle implements Comparable<Circle> {
         return (int) (3 * a + 5 * b + 7 * r);
     }
 
-    @Override
     public int compareTo(Circle obj) {
         return obj.votes - votes;
     }

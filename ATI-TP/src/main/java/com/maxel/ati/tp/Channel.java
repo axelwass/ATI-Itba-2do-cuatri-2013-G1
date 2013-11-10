@@ -13,7 +13,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import org.jfree.data.Range;
-import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
 
 /**
  *
@@ -565,7 +564,7 @@ class Channel {
                 break;
             }
 
-            sumB += (float) (i * histogram[i]);
+            sumB += i * histogram[i];
             float mB = sumB / wB;
             float mF = (sum - sumB) / wF;
 
@@ -581,7 +580,8 @@ class Channel {
 
     }
 
-    public Channel clone() {
+    @Override
+	public Channel clone() {
         return new Channel(values.clone(), width, height);
     }
 
@@ -967,7 +967,7 @@ class Channel {
                                 double h = harrismap[x][y];
                                 if (h < umbral)
                                         continue;
-                                if (!isSpatialMaxima(harrismap, (int) x, (int) y))
+                                if (!isSpatialMaxima(harrismap, x, y))
                                         continue;
                                 // add the corner to the list
                                 corners.add(new Corner(x, y, h));
