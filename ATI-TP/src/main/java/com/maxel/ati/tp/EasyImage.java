@@ -10,6 +10,9 @@ import java.awt.image.BufferedImage;
 import java.awt.image.ColorModel;
 import java.util.List;
 import java.util.Random;
+import java.util.Vector;
+import mpi.cbg.fly.Feature;
+import mpi.cbg.fly.SIFT;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.PlotOrientation;
@@ -21,21 +24,6 @@ import org.jfree.data.statistics.HistogramType;
  * @author maximo
  */
 public class EasyImage {
-
-    BufferedImage img;
-    Channel R;
-    Channel G;
-    Channel B;
-    int[] fullImg;
-    int width;
-    int height;
-    ColorModel cm;
-
-    @Override
-    public EasyImage clone(){
-        EasyImage aux = new EasyImage(img);
-        return aux; 
-    }
     
     public static EasyImage newSquare(int width, int height) {
         EasyImage image = new EasyImage(width, height);
@@ -175,7 +163,36 @@ public class EasyImage {
         return degrade;
     }
 
-    public EasyImage(BufferedImage img) {
+    public static BufferedImage generateHistogram(EasyImage image) {
+
+        HistogramDataset dataset = new HistogramDataset();
+        dataset.setType(HistogramType.FREQUENCY);
+
+        double[] histData = image.getHistogramPixels();
+
+        dataset.addSeries("Histogram", histData, histData.length);
+
+        PlotOrientation orientation = PlotOrientation.VERTICAL;
+        boolean show = false;
+        boolean tooltips = false;
+        boolean urls = false;
+
+        JFreeChart chart = ChartFactory.createHistogram("Histograma",
+                "Nivel de gris", "Apariciones", dataset, orientation, show,
+                tooltips, urls);
+        return chart.createBufferedImage(400, 200);
+    }
+
+    BufferedImage img;
+    Channel R;
+    Channel G;
+    Channel B;
+    int[] fullImg;
+    int width;
+    int height;
+    ColorModel cm;
+
+        public EasyImage(BufferedImage img){
         this.img = img;
         cm = img.getColorModel();
         this.width = img.getWidth();
@@ -185,6 +202,7 @@ public class EasyImage {
         G = new Channel(width, height);
         B = new Channel(width, height);
         updateChannels();
+        this.img = null;
     }
 
     EasyImage(int width, int height) {
@@ -195,8 +213,14 @@ public class EasyImage {
         G = new Channel(width, height);
         B = new Channel(width, height);
     }
-    
-    public void reuse(BufferedImage img){
+
+    @Override
+    public EasyImage clone() {
+        EasyImage aux = new EasyImage(img);
+        return aux; 
+    }
+
+    public void reuse(BufferedImage img) {
          this.img = img;
 //        cm = img.getColorModel();
         this.width = img.getWidth();
@@ -207,6 +231,7 @@ public class EasyImage {
         B = new Channel(width, height);
         updateChannels();
     }
+
     public EasyImage getSubImage(int startX, int startY, int endX, int endY) {
         EasyImage newImg = new EasyImage(endX - startX, endY - startY);
         for (int x = startX; x < endX; x++) {
@@ -264,14 +289,13 @@ public class EasyImage {
         B.dynamicRangeCompression();
         updateFullImg();
     }
-
-    public void applyContrast(int p1, int p2, double y1, double y2) {
+    
+    public void applyContrast(int p1, int p2, double y1, double y2){
         R.contrast(p1, p2, y1, y2);
         G.contrast(p1, p2, y1, y2);
         B.contrast(p1, p2, y1, y2);
         updateFullImg();
     }
-
     public boolean isValid(int x, int y) {
         return (x >= 0 && y >= 0 && x < width && y < width);
     }
@@ -330,8 +354,8 @@ public class EasyImage {
             normalize();
         }
     }
-    
-    public void put(EasyImage img2){
+
+    public void put(EasyImage img2) {
         for (int i = 0; i < fullImg.length; i++) {
             if(img2.R.getValue(i) == 255)
                 R.setValue(i, img2.R.getValue(i));
@@ -385,34 +409,14 @@ public class EasyImage {
         return result;
     }
 
-    public static BufferedImage generateHistogram(EasyImage image) {
-
-        HistogramDataset dataset = new HistogramDataset();
-        dataset.setType(HistogramType.FREQUENCY);
-
-        double[] histData = image.getHistogramPixels();
-
-        dataset.addSeries("Histogram", histData, histData.length);
-
-        PlotOrientation orientation = PlotOrientation.VERTICAL;
-        boolean show = false;
-        boolean tooltips = false;
-        boolean urls = false;
-
-        JFreeChart chart = ChartFactory.createHistogram("Histograma",
-                "Nivel de gris", "Apariciones", dataset, orientation, show,
-                tooltips, urls);
-        return chart.createBufferedImage(400, 200);
-    }
-
     public void umbral(int value) {
         R.umbral(value);
         G.umbral(value);
         B.umbral(value);
         updateFullImg();
     }
-
-    public void toGrey() {
+    
+    public void toGrey(){
         for (int i = 0; i < width * height; i++) {
             double aux = getGreyLevel(i);
             R.setValue(i, aux);
@@ -657,8 +661,8 @@ public class EasyImage {
         this.B.applyCanny();
         updateFullImg();
     }
-    
-    public EasyImage applySusan(boolean showBorders, boolean showCorners, int color){
+
+    public EasyImage applySusan(boolean showBorders, boolean showCorners, int color) {
         EasyImage aux = new EasyImage(width, height);
         aux.R = this.R.applySusan(showBorders,showCorners, 255);
         aux.G = this.G.applySusan(showBorders,showCorners, 0);
@@ -668,8 +672,8 @@ public class EasyImage {
         aux.updateFullImg();
         return aux;
     }
-    
-    public void houghLinesTransform(double eps,int color){
+
+    public void houghLinesTransform(double eps, int color) {
         EasyImage img = clone();
       
         this.R.houghLinesTransform(eps,(color >> 16) & 0x000000FF);
@@ -765,7 +769,8 @@ public class EasyImage {
         panel.repaint();
         System.out.println("tiempo: " + (System.currentTimeMillis()-from));
     }
-    private double[] getAverage(List<Point> l){
+
+    private double[] getAverage(List<Point> l) {
         double[] ret = new double[3];
         ret[0] = 0;
         ret[1] = 0;
@@ -798,5 +803,33 @@ public class EasyImage {
         p1 = Math.sqrt(Math.pow((averageIn[0] - red), 2) + Math.pow((averageIn[1] - green), 2) + Math.pow((averageIn[2] - blue), 2));
         p2 = Math.sqrt(Math.pow((averageOut[0] - red), 2) + Math.pow((averageOut[1] - green), 2) + Math.pow((averageOut[2] - blue), 2));
         return p2 - p1;
+    }
+
+    public void applyHarrisCornerDetector(int masksize, double sigma, double umbral, double k) {
+           List<java.awt.Point> points = R.applyHarrisCornerDetector(masksize, sigma, umbral, k);
+           for (java.awt.Point point : points) {
+                   System.out.println(point.x + " " + point.y);
+                   markPoint(point);
+           }
+   }
+
+    private void markPoint(Point point) {
+            for(int i = -1; i < 2; i++) {
+                    for(int j = -1; j < 2; j++) {
+                            if(R.isValid(point.x + i, point.y + j)) {
+                                    this.setRGB(point.x+i, point.y+j, Color.RED.getRGB());
+                            }
+                    }
+            }
+    }
+     public void detectFeatures() {
+        try {
+            Vector<Feature> features = SIFT.getFeatures(getBufferedImage());
+            for (Feature feature : features) {
+                setRGB((int)feature.location[0], (int)feature.location[1], Color.RED.getRGB());
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+        }
     }
 }

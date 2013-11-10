@@ -34,6 +34,7 @@ import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.Vector;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -52,6 +53,8 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import mpi.cbg.fly.Feature;
+import mpi.cbg.fly.SIFT;
 
 /**
  *
@@ -93,6 +96,7 @@ public class MainJFrame extends javax.swing.JFrame {
         jMenuItem5 = new javax.swing.JMenuItem();
         jMenu12 = new javax.swing.JMenu();
         jMenuItem9 = new javax.swing.JMenuItem();
+        jMenuItem8 = new javax.swing.JMenuItem();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu2 = new javax.swing.JMenu();
         jMenu7 = new javax.swing.JMenu();
@@ -171,6 +175,8 @@ public class MainJFrame extends javax.swing.JFrame {
         jMenu16 = new javax.swing.JMenu();
         trackingImage = new javax.swing.JMenuItem();
         trackingVideo = new javax.swing.JMenuItem();
+        harrisCorners = new javax.swing.JMenuItem();
+        singleSIFT = new javax.swing.JMenuItem();
         jMenu5 = new javax.swing.JMenu();
         Show2 = new javax.swing.JMenuItem();
         toGrey2 = new javax.swing.JMenuItem();
@@ -186,6 +192,7 @@ public class MainJFrame extends javax.swing.JFrame {
         Suma = new javax.swing.JMenuItem();
         Resta12 = new javax.swing.JMenuItem();
         Resta21 = new javax.swing.JMenuItem();
+        jMenuItem7 = new javax.swing.JMenuItem();
 
         jMenu1.setText("jMenu1");
 
@@ -204,6 +211,8 @@ public class MainJFrame extends javax.swing.JFrame {
         jMenu12.setText("jMenu12");
 
         jMenuItem9.setText("jMenuItem9");
+
+        jMenuItem8.setText("jMenuItem8");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -773,6 +782,22 @@ public class MainJFrame extends javax.swing.JFrame {
 
         jMenu4.add(jMenu16);
 
+        harrisCorners.setText("Harris Corners");
+        harrisCorners.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                harrisCornersActionPerformed(evt);
+            }
+        });
+        jMenu4.add(harrisCorners);
+
+        singleSIFT.setText("SIFT");
+        singleSIFT.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                singleSIFTActionPerformed(evt);
+            }
+        });
+        jMenu4.add(singleSIFT);
+
         jMenuBar1.add(jMenu4);
 
         jMenu5.setText("Edit img 2");
@@ -884,6 +909,9 @@ public class MainJFrame extends javax.swing.JFrame {
             }
         });
         jMenu6.add(Resta21);
+
+        jMenuItem7.setText("jMenuItem7");
+        jMenu6.add(jMenuItem7);
 
         jMenuBar1.add(jMenu6);
 
@@ -2727,6 +2755,99 @@ public class MainJFrame extends javax.swing.JFrame {
         }).start();
     }//GEN-LAST:event_trackingVideoActionPerformed
 
+    private void harrisCornersActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_harrisCornersActionPerformed
+           final JFrame frame = new JFrame();
+//        frame.getContentPane().add(lblimage, BorderLayout.CENTER);
+//        frame.setSize(img.getWidth(), img.getHeight());
+        frame.setVisible(true);
+        frame.setTitle("Método de Harris");
+        frame.setBounds(1, 1, 250, 230);
+        Toolkit toolkit = getToolkit();
+        Dimension size = toolkit.getScreenSize();
+        frame.setLocation(size.width / 3 - getWidth() / 3, size.height / 3
+                - getHeight() / 3);
+        frame.setResizable(true);
+        frame.setLayout(null);
+
+        JPanel pan1 = new JPanel();
+        pan1.setBorder(BorderFactory.createTitledBorder("Valores de máscara y sigma"));
+        pan1.setBounds(0, 0, 250, 80);
+
+        JPanel pan2 = new JPanel();
+        pan2.setBorder(BorderFactory.createTitledBorder("Valores de umbral y k"));
+        pan2.setBounds(0, 80, 250, 80);
+
+        JLabel r1Label = new JLabel("size = ");
+        final JTextField r1Field = new JTextField("3");
+        r1Field.setColumns(3);
+
+        JLabel r2Label = new JLabel("sigma = ");
+        final JTextField r2Field = new JTextField("0.25");
+        r2Field.setColumns(3);
+
+        JLabel newR1Label = new JLabel("T = ");
+        final JTextField y1Field = new JTextField("70");
+        y1Field.setColumns(3);
+
+        JLabel newR2Label = new JLabel("k = ");
+        final JTextField y2Field = new JTextField("0.06");
+        y2Field.setColumns(3);
+
+        JButton okButton = new JButton("OK");
+        okButton.setSize(250, 40);
+        okButton.setBounds(0, 160, 250, 40);
+        okButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                int r1;
+                double r2;
+                double y1;
+                double y2;
+
+                try {
+                    r1 = Integer.valueOf(r1Field.getText());
+                    r2 = Double.valueOf(r2Field.getText());
+                    y1 = Double.valueOf(y1Field.getText());
+                    y2 = Double.valueOf(y2Field.getText());
+
+                } catch (NumberFormatException ex) {
+                    System.out.println("Los datos ingresados son invalidos");
+                    return;
+                }
+
+
+                img1.applyHarrisCornerDetector(r1, r2, y1, y2);
+                displayImage(img1.getBufferedImage());
+                frame.dispose();
+
+            }
+        });
+
+        pan1.add(r1Label);
+        pan1.add(r1Field);
+        pan1.add(r2Label);
+        pan1.add(r2Field);
+
+        pan2.add(newR1Label);
+        pan2.add(y1Field);
+        pan2.add(newR2Label);
+        pan2.add(y2Field);
+
+        frame.add(pan1);
+        frame.add(pan2);
+        frame.add(okButton);
+    }//GEN-LAST:event_harrisCornersActionPerformed
+
+    private void singleSIFTActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_singleSIFTActionPerformed
+         Vector<Feature> f1 = SIFT.getFeatures(img1.getBufferedImage());
+         for(Feature f: f1){
+             System.out.println("f: " + f.descriptor);
+         }
+         img1.detectFeatures();
+         displayImage(img1.getBufferedImage());
+    }//GEN-LAST:event_singleSIFTActionPerformed
+
     public void displayImage(BufferedImage img) {
         JFrame frame = new JFrame();
         JLabel lblimage = new JLabel(new ImageIcon(img));
@@ -2845,6 +2966,7 @@ public class MainJFrame extends javax.swing.JFrame {
     private javax.swing.JMenuItem Umbral2;
     private javax.swing.JMenuItem ZeroCross;
     private javax.swing.JMenuItem getSubImage;
+    private javax.swing.JMenuItem harrisCorners;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu10;
     private javax.swing.JMenu jMenu11;
@@ -2868,7 +2990,10 @@ public class MainJFrame extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem4;
     private javax.swing.JMenuItem jMenuItem5;
     private javax.swing.JMenuItem jMenuItem6;
+    private javax.swing.JMenuItem jMenuItem7;
+    private javax.swing.JMenuItem jMenuItem8;
     private javax.swing.JMenuItem jMenuItem9;
+    private javax.swing.JMenuItem singleSIFT;
     private javax.swing.JMenuItem toGrey1;
     private javax.swing.JMenuItem toGrey2;
     private javax.swing.JMenuItem trackingImage;

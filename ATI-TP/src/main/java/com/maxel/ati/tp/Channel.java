@@ -4,9 +4,11 @@
  */
 package com.maxel.ati.tp;
 
+import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -36,11 +38,13 @@ class Channel {
     }
 
     public boolean isValid(int x, int y) {
-        return (x >= 0 && y >= 0 && x < width && y < width);
+        return (x >= 0 && y >= 0 && x < width && y < height);
     }
 
     public void setValue(int x, int y, double v) {
-        values[x + y * width] = v;
+        if (isValid(x, y)) {
+            values[x + y * width] = v;
+        }
     }
 
     public double getValue(int x, int y) {
@@ -51,10 +55,15 @@ class Channel {
     }
 
     public void setValue(int i, double v) {
-        values[i] = v;
+        if (i>=0 && i<values.length) {
+            values[i] = v;
+        }
     }
 
     public double getValue(int i) {
+         if (i<0 || i>=values.length) {
+            throw new IndexOutOfBoundsException();
+        }
         return values[i];
     }
 
@@ -927,4 +936,227 @@ class Channel {
         this.values = newChannel.values;
 
     }
+
+         private class Corner {
+                int x, y;
+                double measure;
+
+                public Corner(int x, int y, double measure) {
+                        this.x = x;
+                        this.y = y;
+                        this.measure = measure;
+                }
+        }
+        public List<java.awt.Point> applyHarrisCornerDetector(int maskSize, double sigma, double umbral,
+                        double k) {
+                double[][] Lx2 = new double[width][height];
+                double[][] Ly2 = new double[width][height];
+                double[][] Lxy = new double[width][height];
+                
+                List<Corner> corners = new ArrayList<Corner>();
+
+                // precompute derivatives
+                computeDerivatives(maskSize, sigma, Lx2, Ly2, Lxy);
+
+                // Harris measure map
+                double[][] harrismap = computeHarrisMap(k, Lx2, Ly2, Lxy);
+                
+                // for each pixel in the hmap, keep the local maxima
+                for (int y = 1; y < this.height - 1; y++) {
+                        for (int x = 1; x < this.width - 1; x++) {
+                                double h = harrismap[x][y];
+                                if (h < umbral)
+                                        continue;
+                                if (!isSpatialMaxima(harrismap, (int) x, (int) y))
+                                        continue;
+                                // add the corner to the list
+                                corners.add(new Corner(x, y, h));
+                        }
+                }
+
+                // remove corners to close to each other (keep the highest measure)
+                Iterator<Corner> iter = corners.iterator();
+                while (iter.hasNext()) {
+                        Corner p = iter.next();
+                        for (Corner n : corners) {
+                                if (n == p)
+                                        continue;
+                                int dist = (int) Math.sqrt((p.x - n.x) * (p.x - n.x)
+                                                + (p.y - n.y) * (p.y - n.y));
+                                if (dist > 3)
+                                        continue;
+                                if (n.measure < p.measure)
+                                        continue;
+                                iter.remove();
+                                break;
+                        }
+                }
+
+
+                List<Point> points = new ArrayList<Point>();
+                for (Corner corner : corners) {
+                        points.add(new Point(corner.x, corner.y));
+                }
+                return points;
+
+        }
+
+        private double gaussian(double x, double y, double sigma2) {
+                double t = (x * x + y * y) / (2 * sigma2);
+                double u = 1.0 / (2 * Math.PI * sigma2);
+                double e = u * Math.exp(-t);
+                return e;
+        }
+        //gradiente 3x3
+        private double[] sobel(int x, int y) {
+                int v00 = 0, v01 = 0, v02 = 0, v10 = 0, v12 = 0, v20 = 0, v21 = 0, v22 = 0;
+
+                int x0 = x - 1, x1 = x, x2 = x + 1;
+                int y0 = y - 1, y1 = y, y2 = y + 1;
+                if (x0 < 0)
+                        x0 = 0;
+                if (y0 < 0)
+                        y0 = 0;
+                if (x2 >= width)
+                        x2 = width - 1;
+                if (y2 >= height)
+                        y2 = height - 1;
+
+                v00 = (int) getForcedPixel(x0, y0);
+                v10 = (int) getForcedPixel(x1, y0);
+                v20 = (int) getForcedPixel(x2, y0);
+                v01 = (int) getForcedPixel(x0, y1);
+                v21 = (int) getForcedPixel(x2, y1);
+                v02 = (int) getForcedPixel(x0, y2);
+                v12 = (int) getForcedPixel(x1, y2);
+                v22 = (int) getForcedPixel(x2, y2);
+
+                double sx = (v20 + 2 * v21 + v22) - (v00 + 2 * v01 + v02);
+                double sy = (v02 + 2 * v12 + v22) - (v00 + 2 * v10 + v20);
+                return new double[] { sx / 4, sy / 4 };
+        }
+
+        private void computeDerivatives(int radius, double sigma, double[][] Lx2,
+                        double[][] Ly2, double[][] Lxy) {
+
+                // gradient values: Gx,Gy
+                double[][][] grad = new double[width][height][];
+                for (int y = 0; y < this.height; y++)
+                        for (int x = 0; x < this.width; x++)
+                                grad[x][y] = sobel(x, y);
+
+                // precompute the coefficients of the gaussian filter
+                double[][] filter = new double[2 * radius + 1][2 * radius + 1];
+                double filtersum = 0;
+                for (int j = -radius; j <= radius; j++) {
+                        for (int i = -radius; i <= radius; i++) {
+                                double g = gaussian(i, j, sigma);
+                                filter[i + radius][j + radius] = g;
+                                filtersum += g;
+                        }
+                }
+
+                // Convolve gradient with gaussian filter:
+                //
+                // Ix2 = (F) * (Gx^2)
+                // Iy2 = (F) * (Gy^2)
+                // Ixy = (F) * (Gx.Gy)
+                //
+                for (int y = 0; y < this.height; y++) {
+                        for (int x = 0; x < this.width; x++) {
+
+                                for (int dy = -radius; dy <= radius; dy++) {
+                                        for (int dx = -radius; dx <= radius; dx++) {
+                                                int xk = x + dx;
+                                                int yk = y + dy;
+                                                if (xk < 0 || xk >= this.width)
+                                                        continue;
+                                                if (yk < 0 || yk >= this.height)
+                                                        continue;
+
+                                                // filter weight
+                                                double f = filter[dx + radius][dy + radius];
+
+                                                // convolution
+                                                Lx2[x][y] += f * grad[xk][yk][0] * grad[xk][yk][0];
+                                                Ly2[x][y] += f * grad[xk][yk][1] * grad[xk][yk][1];
+                                                Lxy[x][y] += f * grad[xk][yk][0] * grad[xk][yk][1];
+                                        }
+                                }
+                                Lx2[x][y] /= filtersum;
+                                Ly2[x][y] /= filtersum;
+                                Lxy[x][y] /= filtersum;
+                        }
+                }
+        }
+
+        private double harrisMeasure(int x, int y, double k, double[][] Lx2,
+                        double[][] Ly2, double[][] Lxy) {
+                // matrix elements (normalized)
+                double m00 = Lx2[x][y];
+                double m01 = Lxy[x][y];
+                double m10 = Lxy[x][y];
+                double m11 = Ly2[x][y];
+
+                // Harris corner measure = det(M)-lambda.trace(M)^2
+
+                return m00 * m11 - m01 * m10 - k * (m00 + m11) * (m00 + m11);
+        }
+
+        private boolean isSpatialMaxima(double[][] hmap, int x, int y) {
+                int n = 8;
+                int[] dx = new int[] { -1, 0, 1, 1, 1, 0, -1, -1 };
+                int[] dy = new int[] { -1, -1, -1, 0, 1, 1, 1, 0 };
+                double w = hmap[x][y];
+                for (int i = 0; i < n; i++) {
+                        double wk = hmap[x + dx[i]][y + dy[i]];
+                        if (wk >= w)
+                                return false;
+                }
+                return true;
+        }
+
+        private double[][] computeHarrisMap(double k, double[][] Lx2,
+                        double[][] Ly2, double[][] Lxy) {
+
+                // Harris measure map
+                double[][] harrismap = new double[width][height];
+                double max = 0;
+
+                // for each pixel in the image
+                for (int y = 0; y < this.height; y++) {
+                        for (int x = 0; x < this.width; x++) {
+                                // compute ans store the harris measure
+                                harrismap[x][y] = harrisMeasure(x, y, k, Lx2, Ly2, Lxy);
+                                if (harrismap[x][y] > max)
+                                        max = harrismap[x][y];
+                        }
+                }
+
+                // rescale measures in 0-100
+                for (int y = 0; y < this.height; y++) {
+                        for (int x = 0; x < this.width; x++) {
+                                double h = harrismap[x][y];
+                                if (h < 0)
+                                        h = 0;
+                                else
+                                        h = 100 * Math.log(1 + h) / Math.log(1 + max);
+                                harrismap[x][y] = h;
+                        }
+                }
+
+                return harrismap;
+        }
+
+
+
+
+        public double getForcedPixel(int x, int y) {
+                if (!isValid(x, y)) {
+                        return 0;
+                }
+
+                return values[y * this.getWidth() + x];
+        }
+
 }
